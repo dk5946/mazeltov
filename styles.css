@@ -76,8 +76,8 @@ body {
 
   background:
     linear-gradient(
-      rgba(247,239,226,.20),
-      rgba(247,239,226,.30)
+      rgba(247,239,226,.40),
+      rgba(247,239,226,.52)
     ),
     url('celebration-background.jpg') center center / cover no-repeat fixed;
 }
@@ -811,8 +811,8 @@ button {
   .recipe-app {
     background-image:
       linear-gradient(
-        rgba(247,239,226,.35),
-        rgba(247,239,226,.45)
+        rgba(247,239,226,.40),
+        rgba(247,239,226,.52)
       ),
       url('celebration-background.jpg');
 
@@ -825,8 +825,8 @@ button {
   .access-gate {
     background-image:
       linear-gradient(
-        rgba(247,239,226,.25),
-        rgba(247,239,226,.35)
+        rgba(247,239,226,.40),
+        rgba(247,239,226,.52)
       ),
       url('celebration-background.jpg');
 
