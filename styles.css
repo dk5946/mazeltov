@@ -825,8 +825,8 @@ button {
   .access-gate {
     background-image:
       linear-gradient(
-        rgba(247,239,226,.18),
-        rgba(247,239,226,.28)
+        rgba(247,239,226,.25),
+        rgba(247,239,226,.35)
       ),
       url('celebration-background.jpg');
 
