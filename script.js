@@ -14,6 +14,10 @@ import {
   setDoc
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-firestore.js";
 
+import {
+  getAuth,
+  signInAnonymously
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 const firebaseConfig = {
   apiKey: "AIzaSyB-O44tJ1GELJWcyX1n59bhL_37otV97u0",
   authDomain: "recipes-a5f0a.firebaseapp.com",
