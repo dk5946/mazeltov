@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#fdf5ec">
+  <meta name="theme-color" content="#fdf3ea">
   <title>Bentzy & Estee's Recipe Book</title>
   <link rel="stylesheet" href="styles.css">
 </head>
@@ -12,10 +12,12 @@
 <body>
 
   <section class="access-gate" aria-labelledby="access-title">
-    <div class="gate-mark">♥</div>
-    <p class="kicker">A private kitchen table</p>
-    <h1 id="access-title">You're invited in!</h1>
-    <p>This little recipe book is just for family and friends. Open the invite link you were sent to step inside.</p>
+    <div class="gate-panel">
+      <img class="gate-monogram" src="monogram.png" alt="B monogram">
+      <p class="kicker">A private kitchen table</p>
+      <h1 id="access-title">You're invited in!</h1>
+      <p>This little recipe book is just for family and friends. Open the invite link you were sent to step inside.</p>
+    </div>
   </section>
 
   <main class="recipe-app">
@@ -23,8 +25,7 @@
     <header class="site-header">
 
       <a class="brand" href="#top" aria-label="Recipe book home">
-        <span>♥</span>
-        B &amp; E
+        <img class="brand-monogram" src="monogram.png" alt="B monogram">
         <small>kitchen notes</small>
       </a>
 
@@ -55,6 +56,8 @@
 
 
     <section class="hero" id="top" aria-labelledby="page-title">
+
+      <img class="hero-monogram" src="monogram.png" alt="" aria-hidden="true">
 
       <div class="hero-copy">
 
@@ -309,7 +312,7 @@
 
       <label>
         Recipe from
-        <span class="field-hint">optional</span>
+        <span class="field-hint">who is sharing it? e.g. Grandma, Aunt Sara</span>
 
         <input
           name="from"
@@ -468,6 +471,8 @@
 
       <h2 id="detail-title"></h2>
 
+      <p class="detail-from" id="detail-from"></p>
+
       <p
         class="detail-note"
         id="detail-note"
@@ -481,8 +486,6 @@
         <span id="detail-ingredients-count"></span>
 
         <span id="detail-makes"></span>
-
-        <span id="detail-from"></span>
 
       </div>
 
