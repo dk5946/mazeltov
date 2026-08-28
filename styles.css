@@ -811,12 +811,12 @@ button {
   .recipe-app {
     background-image:
       linear-gradient(
-        rgba(247,239,226,.30),
-        rgba(247,239,226,.42)
+        rgba(247,239,226,.35),
+        rgba(247,239,226,.45)
       ),
       url('celebration-background.jpg');
 
-    background-position: center 50%;
+    background-position: center 60%;
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: scroll;
