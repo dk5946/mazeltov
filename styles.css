@@ -851,4 +851,30 @@ button {
     left: 12px;
     justify-content: space-between;
   }
+  @media screen and (max-width: 480px) {
+  body .recipe-app {
+    background:
+      linear-gradient(
+        rgba(247, 239, 226, 0.05),
+        rgba(247, 239, 226, 0.10)
+      ),
+      url("celebration-background.jpg") center center / 100% auto no-repeat !important;
+
+    background-color: #f7efe2 !important;
+  }
+
+  body .access-gate {
+    background:
+      linear-gradient(
+        rgba(247, 239, 226, 0.05),
+        rgba(247, 239, 226, 0.10)
+      ),
+      url("celebration-background.jpg") center center / 100% auto no-repeat !important;
+
+    background-color: #f7efe2 !important;
+  }
+
+  body .recipe-card {
+    background: rgba(255, 250, 242, 0.45) !important;
+  }
 }
