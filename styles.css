@@ -76,8 +76,8 @@ body {
 
   background:
     linear-gradient(
-      rgba(247,239,226,.58),
-      rgba(247,239,226,.68)
+      rgba(247,239,226,.20),
+      rgba(247,239,226,.30)
     ),
     url('celebration-background.jpg') center center / cover no-repeat fixed;
 }
