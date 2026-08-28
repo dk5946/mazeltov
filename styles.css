@@ -92,8 +92,8 @@ button {
 
   background:
     linear-gradient(
-      rgba(247, 239, 226, 0.58),
-      rgba(247, 239, 226, 0.68)
+      rgba(247, 239, 226, 0.2),
+      rgba(247, 239, 226, 0.3)
     ),
     url('celebration-background.jpg') center / cover no-repeat fixed;
 }
