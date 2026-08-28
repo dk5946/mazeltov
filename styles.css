@@ -26,10 +26,6 @@ body {
   font-family: 'Libre Baskerville', Georgia, serif;
 }
 
-/* =========================
-   ACCESS SCREEN
-   ========================= */
-
 .access-gate {
   min-height: 100vh;
   display: grid;
@@ -37,19 +33,13 @@ body {
   justify-items: center;
   padding: 40px;
   text-align: center;
-
-  background:
-    linear-gradient(
-      rgba(247,239,226,.40),
-      rgba(247,239,226,.52)
-    ),
-    url('celebration-background.jpg') center center / cover no-repeat fixed;
+  background: linear-gradient(rgba(247,239,226,.76),rgba(247,239,226,.9)),url('celebration-background.jpg') center/cover fixed;
 }
 
 .access-gate h1 {
   margin: 15px 0;
   color: var(--deep);
-  font: 700 clamp(3.3rem,8vw,7rem)/.9 'Playfair Display', serif;
+  font: 700 clamp(3.3rem,8vw,7rem)/.9 'Playfair Display',serif;
   letter-spacing: -.05em;
 }
 
@@ -66,20 +56,10 @@ body {
   font-size: 1.4rem;
 }
 
-/* =========================
-   MAIN APP
-   ========================= */
-
 .recipe-app {
   display: none;
   min-height: 100vh;
-
-  background:
-    linear-gradient(
-      rgba(247,239,226,.58),
-      rgba(247,239,226,.68)
-    ),
-    url('celebration-background.jpg') center center / cover no-repeat fixed;
+  background: linear-gradient(rgba(247,239,226,.89),rgba(247,239,226,.95)),url('celebration-background.jpg') center/cover fixed;
 }
 
 body.is-authenticated .access-gate {
@@ -89,10 +69,6 @@ body.is-authenticated .access-gate {
 body.is-authenticated .recipe-app {
   display: block;
 }
-
-/* =========================
-   HEADER
-   ========================= */
 
 .site-header {
   display: flex;
@@ -106,7 +82,7 @@ body.is-authenticated .recipe-app {
 
 .brand {
   color: var(--deep);
-  font: 700 1.15rem 'Playfair Display', serif;
+  font: 700 1.15rem 'Playfair Display',serif;
   text-decoration: none;
   letter-spacing: .04em;
 }
@@ -120,7 +96,7 @@ body.is-authenticated .recipe-app {
   display: block;
   margin: 2px 0 0 20px;
   color: rgba(29,47,43,.55);
-  font: 500 .52rem 'DM Mono', monospace;
+  font: 500 .52rem 'DM Mono',monospace;
   letter-spacing: .16em;
   text-transform: uppercase;
 }
@@ -146,7 +122,7 @@ body.is-authenticated .recipe-app {
   outline: 0;
   background: transparent;
   color: var(--ink);
-  font: italic .75rem 'Libre Baskerville', serif;
+  font: italic .75rem 'Libre Baskerville',serif;
 }
 
 .search-box input::placeholder {
@@ -154,7 +130,7 @@ body.is-authenticated .recipe-app {
 }
 
 button {
-  font-family: 'DM Mono', monospace;
+  font-family: 'DM Mono',monospace;
   cursor: pointer;
 }
 
@@ -174,10 +150,6 @@ button {
   margin-right: 5px;
 }
 
-/* =========================
-   HERO
-   ========================= */
-
 .hero {
   display: flex;
   justify-content: space-between;
@@ -194,7 +166,7 @@ button {
 .eyebrow,
 .kicker {
   color: var(--coral);
-  font: 500 .65rem 'DM Mono', monospace;
+  font: 500 .65rem 'DM Mono',monospace;
   letter-spacing: .17em;
   text-transform: uppercase;
 }
@@ -206,7 +178,7 @@ button {
 .hero h1 {
   margin: 22px 0 18px;
   color: var(--deep);
-  font: 700 clamp(3.2rem,7vw,7rem)/.88 'Playfair Display', serif;
+  font: 700 clamp(3.2rem,7vw,7rem)/.88 'Playfair Display',serif;
   letter-spacing: -.045em;
 }
 
@@ -225,7 +197,7 @@ button {
 .hero-note {
   margin: 0 0 15px;
   color: var(--coral);
-  font: 500 .62rem/1.7 'DM Mono', monospace;
+  font: 500 .62rem/1.7 'DM Mono',monospace;
   letter-spacing: .1em;
   text-align: right;
 }
@@ -234,10 +206,6 @@ button {
   color: var(--deep);
   font-size: .72rem;
 }
-
-/* =========================
-   RECIPE SECTION
-   ========================= */
 
 .recipe-section {
   max-width: 1180px;
@@ -256,7 +224,7 @@ button {
 .section-heading h2 {
   margin: 7px 0 0;
   color: var(--deep);
-  font: 600 clamp(1.8rem,3vw,2.7rem) 'Playfair Display', serif;
+  font: 600 clamp(1.8rem,3vw,2.7rem) 'Playfair Display',serif;
 }
 
 .kicker {
@@ -264,7 +232,7 @@ button {
 }
 
 .recipe-count {
-  font: 500 .62rem 'DM Mono', monospace;
+  font: 500 .62rem 'DM Mono',monospace;
   text-transform: uppercase;
   color: rgba(29,47,43,.5);
 }
@@ -306,9 +274,7 @@ button {
   flex-direction: column;
   justify-content: space-between;
   padding: 25px;
-
-  background: rgba(255,250,242,.64);
-
+  background: rgba(255,250,242,.72);
   border: 1px solid rgba(29,47,43,.17);
   animation: rise .5s ease-out both;
 }
@@ -325,12 +291,12 @@ button {
   max-width: 85%;
   margin: 14px 0 10px;
   color: var(--deep);
-  font: 600 1.55rem/1 'Playfair Display', serif;
+  font: 600 1.55rem/1 'Playfair Display',serif;
 }
 
 .card-category {
   color: var(--coral);
-  font: 500 .58rem 'DM Mono', monospace;
+  font: 500 .58rem 'DM Mono',monospace;
   letter-spacing: .12em;
   text-transform: uppercase;
 }
@@ -349,7 +315,7 @@ button {
   margin-top: 25px;
   padding-top: 15px;
   border-top: 1px solid var(--line);
-  font: 500 .58rem 'DM Mono', monospace;
+  font: 500 .58rem 'DM Mono',monospace;
   color: rgba(29,47,43,.55);
 }
 
@@ -358,7 +324,7 @@ button {
   padding: 0;
   background: transparent;
   color: var(--coral);
-  font: 500 .58rem 'DM Mono', monospace;
+  font: 500 .58rem 'DM Mono',monospace;
   text-transform: uppercase;
 }
 
@@ -379,16 +345,12 @@ button {
   font-style: italic;
 }
 
-/* =========================
-   FOOTER
-   ========================= */
-
 .site-footer {
   padding: 35px 5vw;
   border-top: 1px solid var(--line);
   text-align: center;
   color: rgba(29,47,43,.6);
-  font: 500 .58rem 'DM Mono', monospace;
+  font: 500 .58rem 'DM Mono',monospace;
   letter-spacing: .1em;
   text-transform: uppercase;
 }
@@ -397,10 +359,6 @@ button {
   color: var(--sun);
   margin: 0 10px;
 }
-
-/* =========================
-   DIALOGS
-   ========================= */
 
 .recipe-dialog {
   width: min(590px,92vw);
@@ -431,7 +389,7 @@ button {
 .dialog-top h2 {
   margin: 7px 0 0;
   color: var(--deep);
-  font: 600 2rem 'Playfair Display', serif;
+  font: 600 2rem 'Playfair Display',serif;
 }
 
 .close-button {
@@ -446,7 +404,7 @@ button {
   display: block;
   margin: 15px 0;
   color: var(--deep);
-  font: 500 .6rem 'DM Mono', monospace;
+  font: 500 .6rem 'DM Mono',monospace;
   letter-spacing: .07em;
   text-transform: uppercase;
 }
@@ -462,7 +420,7 @@ button {
   padding: 10px;
   background: transparent;
   color: var(--ink);
-  font: .78rem 'Libre Baskerville', serif;
+  font: .78rem 'Libre Baskerville',serif;
 }
 
 .recipe-dialog textarea {
@@ -486,10 +444,6 @@ button {
   margin-top: 10px;
   width: 100%;
 }
-
-/* =========================
-   DETAIL DIALOG
-   ========================= */
 
 .detail-dialog {
   width: min(760px,92vw);
@@ -521,7 +475,7 @@ button {
   max-width: 620px;
   margin: 20px 0 12px;
   color: var(--deep);
-  font: 600 clamp(2.2rem,5vw,4.5rem)/.95 'Playfair Display', serif;
+  font: 600 clamp(2.2rem,5vw,4.5rem)/.95 'Playfair Display',serif;
   letter-spacing: -.04em;
 }
 
@@ -542,7 +496,7 @@ button {
   border-top: 1px solid var(--line);
   border-bottom: 1px solid var(--line);
   color: var(--coral);
-  font: 500 .6rem 'DM Mono', monospace;
+  font: 500 .6rem 'DM Mono',monospace;
   letter-spacing: .08em;
   text-transform: uppercase;
 }
@@ -556,7 +510,7 @@ button {
 .detail-columns h3 {
   margin: 0 0 14px;
   color: var(--deep);
-  font: 600 1.45rem 'Playfair Display', serif;
+  font: 600 1.45rem 'Playfair Display',serif;
 }
 
 .detail-columns ul,
@@ -574,32 +528,23 @@ button {
 
 .detail-columns ol li::marker {
   color: var(--coral);
-  font-family: 'DM Mono', monospace;
+  font-family: 'DM Mono',monospace;
   font-size: .7rem;
 }
-
-/* =========================
-   DELETE / UNDO
-   ========================= */
 
 .undo-bar {
   position: fixed;
   right: 22px;
   bottom: 22px;
   z-index: 5;
-
   display: flex;
   align-items: center;
   gap: 18px;
-
   padding: 14px 16px;
-
   border: 1px solid var(--deep);
   background: var(--deep);
   color: var(--paper);
-
-  font: 500 .65rem 'DM Mono', monospace;
-
+  font: 500 .65rem 'DM Mono',monospace;
   box-shadow: 5px 5px 0 rgba(23,61,54,.2);
 }
 
@@ -613,7 +558,7 @@ button {
   padding: 0 0 3px;
   background: transparent;
   color: var(--sun);
-  font: 500 .62rem 'DM Mono', monospace;
+  font: 500 .62rem 'DM Mono',monospace;
   text-transform: uppercase;
 }
 
@@ -646,7 +591,7 @@ button {
   border: 1px solid var(--line);
   padding: 11px;
   background: transparent;
-  font: 500 .7rem 'DM Mono', monospace;
+  font: 500 .7rem 'DM Mono',monospace;
 }
 
 .delete-actions {
@@ -675,10 +620,6 @@ button {
   color: var(--white);
 }
 
-/* =========================
-   ANIMATION
-   ========================= */
-
 @keyframes rise {
   from {
     opacity: 0;
@@ -690,10 +631,6 @@ button {
     transform: translateY(0);
   }
 }
-
-/* =========================
-   TABLET
-   ========================= */
 
 @media (max-width:700px) {
 
@@ -736,10 +673,6 @@ button {
   }
 }
 
-/* =========================
-   PHONE
-   ========================= */
-
 @media (max-width:480px) {
 
   .site-header {
@@ -756,7 +689,7 @@ button {
 
   .filters {
     gap: 14px;
-    overflow-x: auto;
+    overflow: auto;
   }
 
   .filter {
@@ -797,58 +730,5 @@ button {
   .detail-meta {
     gap: 14px;
     flex-wrap: wrap;
-  }
-
-  /*
-   * MOBILE PHOTO
-   *
-   * The important part:
-   * - center the photo
-   * - show the couple clearly
-   * - remove the heavy beige wash
-   */
-
-  .recipe-app {
-    background-image:
-      linear-gradient(
-        rgba(247,239,226,.20),
-        rgba(247,239,226,.32)
-      ),
-      url('celebration-background.jpg');
-
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-  }
-
-  .access-gate {
-    background-image:
-      linear-gradient(
-        rgba(247,239,226,.18),
-        rgba(247,239,226,.28)
-      ),
-      url('celebration-background.jpg');
-
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-  }
-
-  /*
-   * Make the recipe cards slightly transparent
-   * so the picture can still be seen behind them.
-   */
-
-  .recipe-card {
-    background: rgba(255,250,242,.55);
-  }
-
-  .undo-bar {
-    right: 12px;
-    bottom: 12px;
-    left: 12px;
-    justify-content: space-between;
   }
 }
