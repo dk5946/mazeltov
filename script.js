@@ -21,6 +21,7 @@ let deleteTargetId = null;
 const undoBar = document.querySelector('#undo-bar');
 const undoMessage = document.querySelector('#undo-message');
 const undoButton = document.querySelector('#undo-delete');
+const detailDialog = document.querySelector('#detail-dialog');
 function saveRecipes() { localStorage.setItem(storageKey, JSON.stringify(recipes)); }
 function renderRecipes() {
   const query = search.value.trim().toLowerCase();
@@ -47,7 +48,17 @@ grid.addEventListener('click', (event) => {
     return;
   }
   const viewButton = event.target.closest('[data-view]');
-  if (viewButton) { const recipe = recipes.find((item) => item.id === viewButton.dataset.view); alert(`${recipe.name}\n\nIngredients\n${recipe.ingredients.join('\n')}\n\nMethod\n${recipe.method.join('\n')}`); }
+  if (viewButton) {
+    const recipe = recipes.find((item) => item.id === viewButton.dataset.view);
+    document.querySelector('#detail-category').textContent = recipe.category;
+    document.querySelector('#detail-title').textContent = recipe.name;
+    document.querySelector('#detail-note').textContent = recipe.note;
+    document.querySelector('#detail-time').textContent = recipe.time;
+    document.querySelector('#detail-ingredients-count').textContent = `${recipe.ingredients.length} ingredients`;
+    document.querySelector('#detail-ingredients').innerHTML = recipe.ingredients.map((ingredient) => `<li>${ingredient}</li>`).join('');
+    document.querySelector('#detail-method').innerHTML = recipe.method.map((step) => `<li>${step}</li>`).join('');
+    detailDialog.showModal();
+  }
 });
 form.addEventListener('submit', (event) => {
   event.preventDefault();
@@ -80,4 +91,5 @@ undoButton.addEventListener('click', () => {
   undoBar.hidden = true;
   renderRecipes();
 });
+document.querySelectorAll('[data-close-detail]').forEach((button) => button.addEventListener('click', () => detailDialog.close()));
 renderRecipes();
