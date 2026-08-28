@@ -645,4 +645,14 @@ document
 // START
 // =========================
 
-loadRecipes();
+async function startApp() {
+  try {
+    await signInAnonymously(auth);
+    await loadRecipes();
+  } catch (error) {
+    console.error('Firebase authentication failed:', error);
+    alert('Could not connect to Firebase. Please check your Firebase Authentication setup.');
+  }
+}
+
+startApp();
