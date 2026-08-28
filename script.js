@@ -1,3 +1,5 @@
+const inviteToken = '13d7c9ecd2b24f8fa3d4ce5b83cc8354';
+if (window.location.hash === `#invite=${inviteToken}`) document.body.classList.add('is-authenticated');
 const storageKey = 'bentzy-esti-recipes';
 const starterRecipes = [
   { id: 'challah', name: 'Friday night challah', category: 'Bakes', time: '2 hr 30 min', note: 'Golden, soft, and made for tearing into while it is still warm.', ingredients: ['4 cups flour', '2 tsp instant yeast', '1 cup warm water', '2 eggs', '2 tbsp honey', '1 tsp salt'], method: ['Mix and knead until smooth.', 'Let rise until doubled.', 'Braid, brush with egg, and bake at 350°F until golden.'] },
@@ -6,12 +8,19 @@ const starterRecipes = [
 ];
 let recipes = JSON.parse(localStorage.getItem(storageKey) || 'null') || starterRecipes;
 let activeFilter = 'All';
+let lastDeletedRecipe = JSON.parse(localStorage.getItem('bentzy-esti-last-deleted') || 'null');
 const grid = document.querySelector('#recipe-grid');
 const search = document.querySelector('#recipe-search');
 const emptyState = document.querySelector('#empty-state');
 const count = document.querySelector('#recipe-count');
 const dialog = document.querySelector('#recipe-dialog');
 const form = document.querySelector('#recipe-form');
+const deleteDialog = document.querySelector('#delete-dialog');
+const deleteForm = document.querySelector('#delete-form');
+let deleteTargetId = null;
+const undoBar = document.querySelector('#undo-bar');
+const undoMessage = document.querySelector('#undo-message');
+const undoButton = document.querySelector('#undo-delete');
 function saveRecipes() { localStorage.setItem(storageKey, JSON.stringify(recipes)); }
 function renderRecipes() {
   const query = search.value.trim().toLowerCase();
@@ -28,9 +37,15 @@ document.querySelectorAll('[data-filter]').forEach((button) => button.addEventLi
 search.addEventListener('input', renderRecipes);
 document.querySelector('[data-open-form]').addEventListener('click', () => dialog.showModal());
 document.querySelector('[data-close-form]').addEventListener('click', () => dialog.close());
+document.querySelectorAll('[data-close-delete]').forEach((button) => button.addEventListener('click', () => deleteDialog.close()));
 grid.addEventListener('click', (event) => {
   const deleteButton = event.target.closest('[data-delete]');
-  if (deleteButton) { recipes = recipes.filter((recipe) => recipe.id !== deleteButton.dataset.delete); saveRecipes(); renderRecipes(); return; }
+  if (deleteButton) {
+    deleteTargetId = deleteButton.dataset.delete;
+    document.querySelector('#delete-confirmation').value = '';
+    deleteDialog.showModal();
+    return;
+  }
   const viewButton = event.target.closest('[data-view]');
   if (viewButton) { const recipe = recipes.find((item) => item.id === viewButton.dataset.view); alert(`${recipe.name}\n\nIngredients\n${recipe.ingredients.join('\n')}\n\nMethod\n${recipe.method.join('\n')}`); }
 });
@@ -39,5 +54,30 @@ form.addEventListener('submit', (event) => {
   const data = new FormData(form);
   recipes.unshift({ id: `recipe-${Date.now()}`, name: data.get('name'), category: data.get('category'), time: data.get('time'), note: data.get('note'), ingredients: data.get('ingredients').split('\n').filter(Boolean), method: data.get('method').split('\n').filter(Boolean) });
   saveRecipes(); form.reset(); dialog.close(); activeFilter = 'All'; document.querySelectorAll('[data-filter]').forEach((item) => item.classList.toggle('is-active', item.dataset.filter === 'All')); renderRecipes();
+});
+deleteForm.addEventListener('submit', (event) => {
+  event.preventDefault();
+  const confirmation = document.querySelector('#delete-confirmation');
+  if (confirmation.value.trim() !== 'DELETE') return;
+  lastDeletedRecipe = recipes.find((recipe) => recipe.id === deleteTargetId) || null;
+  recipes = recipes.filter((recipe) => recipe.id !== deleteTargetId);
+  deleteTargetId = null;
+  saveRecipes();
+  if (lastDeletedRecipe) {
+    localStorage.setItem('bentzy-esti-last-deleted', JSON.stringify(lastDeletedRecipe));
+    undoMessage.textContent = `${lastDeletedRecipe.name} deleted.`;
+    undoBar.hidden = false;
+  }
+  deleteDialog.close();
+  renderRecipes();
+});
+undoButton.addEventListener('click', () => {
+  if (!lastDeletedRecipe) return;
+  recipes.unshift(lastDeletedRecipe);
+  saveRecipes();
+  localStorage.removeItem('bentzy-esti-last-deleted');
+  lastDeletedRecipe = null;
+  undoBar.hidden = true;
+  renderRecipes();
 });
 renderRecipes();
