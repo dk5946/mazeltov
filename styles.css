@@ -816,7 +816,7 @@ button {
       ),
       url('celebration-background.jpg');
 
-    background-position: center center;
+    background-position: 40% center;
     background-size: cover;
     background-repeat: no-repeat;
     background-attachment: scroll;
