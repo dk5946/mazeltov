@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#f7efe2">
-  <title>Bentzy & Esti's Recipe Book</title>
+  <title>Bentzy & Estee's Recipe Book</title>
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -17,9 +17,9 @@
         <button class="add-button" type="button" data-open-form><span aria-hidden="true">+</span> Add recipe</button>
       </div>
     </header>
-    <section class="hero" id="top" aria-labelledby="page-title"><div class="hero-copy"><p class="eyebrow"><span></span> gathered around our table</p><h1 id="page-title"><em>Esti's</em> kichen</h1><p>A little collection of the meals, bakes, and sweet things that make a house feel like home.</p></div><p class="hero-note">Vol. 01<br><strong>EST. 2026</strong></p></section>
+    <section class="hero" id="top" aria-labelledby="page-title"><div class="hero-copy"><p class="eyebrow"><span></span> gathered around our table</p><h1 id="page-title"><em>Estee's</em> Kitchen</h1><p>A little collection of the meals, bakes, and sweet things that make a house feel like home.</p></div><p class="hero-note">Vol. 01<br><strong>EST. 2026</strong></p></section>
     <section class="recipe-section" aria-labelledby="collection-title"><div class="section-heading"><div><p class="kicker">The collection</p><h2 id="collection-title">Made to be shared</h2></div><p class="recipe-count" id="recipe-count">0 recipes</p></div><nav class="filters" aria-label="Filter recipes"><button class="filter is-active" type="button" data-filter="All">All</button><button class="filter" type="button" data-filter="Mains">Mains</button><button class="filter" type="button" data-filter="Bakes">Bakes</button><button class="filter" type="button" data-filter="Sweets">Sweets</button><button class="filter" type="button" data-filter="Drinks">Drinks</button></nav><div class="recipe-grid" id="recipe-grid" aria-live="polite"></div><p class="empty-state" id="empty-state" hidden>No recipes match that search yet.</p></section>
-    <footer class="site-footer"><span>✦</span> Bentzy &amp; Esti's kitchen notes <span>✦</span></footer>
+    <footer class="site-footer"><span>✦</span> Bentzy &amp; Estee's kitchen notes <span>✦</span></footer>
   </main>
   <div class="undo-bar" id="undo-bar" role="status" hidden><span id="undo-message">Recipe deleted.</span><button type="button" id="undo-delete">Undo delete</button></div>
   <dialog class="recipe-dialog" id="recipe-dialog" aria-labelledby="form-title"><form id="recipe-form"><div class="dialog-top"><div><p class="kicker">New kitchen note</p><h2 id="form-title">Add a recipe</h2></div><button type="button" class="close-button" data-close-form aria-label="Close form">×</button></div><label>Recipe name<input name="name" required maxlength="60" placeholder="e.g. Overnight Kugel"></label><div class="form-row"><label>Category<select name="category"><option>Mains</option><option>Sweets</option><option>Sides</option><option>Soups</option><option>Salads</option><option>Desserts</option><option>Drinks</option></select></label><label>Time<input name="time" required maxlength="30" placeholder="45 min"></label></div><label>Short note<textarea name="note" required maxlength="180" rows="3" placeholder="What makes this one special?"></textarea></label><label>Ingredients <span class="field-hint">one per line</span><textarea name="ingredients" required rows="5" placeholder="2 cups flour&#10;1 tsp salt&#10;..."></textarea></label><label>Method <span class="field-hint">one step per line</span><textarea name="method" required rows="5" placeholder="Whisk the dry ingredients...&#10;Fold and bake..."></textarea></label><button class="save-button" type="submit">Save recipe <span aria-hidden="true">↗</span></button></form></dialog>
