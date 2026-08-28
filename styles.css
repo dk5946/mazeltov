@@ -1,15 +1,18 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Caveat:wght@500;600;700&display=swap');
 
 :root {
-  --paper: #fdf5ec;
+  --paper: #fdf3ea;
   --ink: #4a3630;
-  --deep: #a44a4f;
-  --coral: #e0836f;
+  --deep: #a3454f;
+  --coral: #e08574;
+  --rose: #d46b73;
   --sun: #dda23a;
-  --sage: #7c8f6e;
-  --blush: #f6e2d8;
+  --sage: #7c9070;
+  --blush: #f5ddd2;
+  --blush-strong: #f0c9bb;
   --line: rgba(74,54,48,.16);
   --white: #fffbf5;
+  --glass: rgba(255,251,245,.78);
 }
 
 * {
@@ -29,6 +32,30 @@ body {
 }
 
 /* =========================
+   SHARED PHOTO BACKGROUND
+   Shows the full photo (never cropped) so the
+   whole couple is always visible, letterboxed
+   on a soft cream background, with a light
+   wash so the photo still reads clearly behind
+   the glass panels of text.
+   ========================= */
+
+.access-gate,
+.recipe-app {
+  background-color: var(--paper);
+  background-image:
+    linear-gradient(
+      rgba(253,243,234,.22),
+      rgba(253,243,234,.3)
+    ),
+    url('celebration-background.jpg');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: contain;
+  background-attachment: fixed;
+}
+
+/* =========================
    ACCESS SCREEN
    ========================= */
 
@@ -39,33 +66,55 @@ body {
   justify-items: center;
   padding: 40px;
   text-align: center;
+}
 
-  background:
-    linear-gradient(
-      rgba(253,245,236,.45),
-      rgba(253,245,236,.6)
-    ),
-    url('celebration-background.jpg') center center / cover no-repeat fixed;
+.access-gate > * {
+  position: relative;
+  z-index: 1;
+}
+
+.access-gate::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    ellipse at center,
+    rgba(253,243,234,.72) 0%,
+    rgba(253,243,234,.35) 60%,
+    rgba(253,243,234,0) 100%
+  );
+}
+
+.gate-panel {
+  position: relative;
+  z-index: 1;
+  padding: 40px 44px;
+  border-radius: 28px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 20px 50px rgba(74,54,48,.14);
 }
 
 .access-gate h1 {
   margin: 15px 0;
   color: var(--deep);
-  font: 700 clamp(3rem,7.5vw,6.2rem)/1 'Playfair Display', serif;
+  font: 700 clamp(2.8rem,7vw,5.6rem)/1 'Playfair Display', serif;
   letter-spacing: -.03em;
 }
 
-.access-gate > p:not(.kicker) {
+.access-gate > p:not(.kicker),
+.gate-panel > p:not(.kicker) {
   max-width: 340px;
-  color: rgba(74,54,48,.78);
+  color: rgba(74,54,48,.8);
   font-size: .92rem;
   line-height: 1.8;
 }
 
-.gate-mark {
-  margin-bottom: 18px;
-  color: var(--coral);
-  font-size: 1.8rem;
+.gate-monogram {
+  width: 108px;
+  height: auto;
+  margin-bottom: 14px;
 }
 
 /* =========================
@@ -75,13 +124,7 @@ body {
 .recipe-app {
   display: none;
   min-height: 100vh;
-
-  background:
-    linear-gradient(
-      rgba(253,245,236,.45),
-      rgba(253,245,236,.6)
-    ),
-    url('celebration-background.jpg') center center / cover no-repeat fixed;
+  position: relative;
 }
 
 body.is-authenticated .access-gate {
@@ -101,10 +144,21 @@ body.is-authenticated .recipe-app {
   align-items: center;
   justify-content: space-between;
   max-width: 1180px;
-  margin: auto;
-  padding: 22px 5vw;
-  border-bottom: 1px solid var(--line);
-  background: rgba(255,251,245,.55);
+  margin: 18px auto 0;
+  padding: 16px 5vw;
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 8px 24px rgba(74,54,48,.1);
+}
+
+@media (min-width: 701px) {
+  .site-header {
+    margin-left: 5vw;
+    margin-right: 5vw;
+    width: auto;
+  }
 }
 
 .brand {
@@ -116,15 +170,16 @@ body.is-authenticated .recipe-app {
   letter-spacing: .01em;
 }
 
-.brand span {
-  color: var(--coral);
-  margin-right: 8px;
-  font-size: 1.1em;
+.brand-monogram {
+  width: 52px;
+  height: auto;
+  margin-right: 12px;
+  vertical-align: middle;
 }
 
 .brand small {
   display: block;
-  margin: 3px 0 0 24px;
+  margin: 3px 0 0 2px;
   color: rgba(74,54,48,.55);
   font: 500 .55rem 'DM Mono', monospace;
   letter-spacing: .16em;
@@ -141,7 +196,7 @@ body.is-authenticated .recipe-app {
   display: flex;
   align-items: center;
   gap: 8px;
-  border-bottom: 2px solid var(--blush);
+  border-bottom: 2px solid var(--blush-strong);
   padding: 8px 2px;
   color: var(--deep);
   transition: border-color .2s ease;
@@ -172,22 +227,21 @@ button {
 .add-button,
 .save-button {
   border: none;
-  background: var(--coral);
+  background: linear-gradient(135deg, var(--coral), var(--rose));
   color: var(--white);
   padding: 13px 20px;
   border-radius: 999px;
   font-size: .68rem;
   letter-spacing: .06em;
   text-transform: uppercase;
-  box-shadow: 0 4px 14px rgba(224,131,111,.35);
-  transition: transform .15s ease, box-shadow .15s ease, background .15s ease;
+  box-shadow: 0 6px 16px rgba(212,107,115,.4);
+  transition: transform .15s ease, box-shadow .15s ease;
 }
 
 .add-button:hover,
 .save-button:hover {
-  background: var(--deep);
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(164,74,79,.35);
+  box-shadow: 0 8px 20px rgba(212,107,115,.5);
 }
 
 .add-button span {
@@ -200,16 +254,37 @@ button {
    ========================= */
 
 .hero {
+  position: relative;
   display: flex;
   justify-content: space-between;
   align-items: end;
   max-width: 1180px;
   margin: auto;
-  padding: clamp(60px,10vw,110px) 5vw 80px;
+  padding: clamp(50px,9vw,100px) 5vw 70px;
+}
+
+.hero-monogram {
+  position: absolute;
+  top: 50%;
+  left: 5vw;
+  transform: translateY(-50%);
+  width: min(360px, 34vw);
+  height: auto;
+  opacity: .14;
+  pointer-events: none;
+  z-index: 0;
 }
 
 .hero-copy {
+  position: relative;
+  z-index: 1;
   max-width: 720px;
+  padding: 32px 36px;
+  border-radius: 28px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: 0 16px 40px rgba(74,54,48,.1);
 }
 
 .eyebrow,
@@ -229,7 +304,7 @@ button {
 .hero h1 {
   margin: 18px 0 16px;
   color: var(--deep);
-  font: 700 clamp(2.9rem,6.4vw,6rem)/1 'Playfair Display', serif;
+  font: 700 clamp(2.6rem,6vw,5.6rem)/1 'Playfair Display', serif;
   letter-spacing: -.03em;
 }
 
@@ -242,13 +317,18 @@ button {
 
 .hero-copy > p:last-child {
   max-width: 440px;
-  color: rgba(74,54,48,.8);
+  color: rgba(74,54,48,.82);
   font-size: .98rem;
   line-height: 1.85;
 }
 
 .hero-note {
   margin: 0 0 14px;
+  padding: 10px 16px;
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   color: var(--sage);
   font: 500 .65rem/1.7 'DM Mono', monospace;
   letter-spacing: .1em;
@@ -274,8 +354,11 @@ button {
   display: flex;
   justify-content: space-between;
   align-items: end;
-  border-top: 1px solid var(--line);
-  padding-top: 25px;
+  padding: 22px 28px;
+  border-radius: 24px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .section-heading h2 {
@@ -298,11 +381,16 @@ button {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin: 28px 0 30px;
+  margin: 22px 0 30px;
+  padding: 14px 16px;
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
 }
 
 .filter {
-  border: 1px solid var(--line);
+  border: 1px solid transparent;
   border-radius: 999px;
   padding: 9px 16px;
   background: rgba(255,251,245,.7);
@@ -316,7 +404,7 @@ button {
 .filter.is-active,
 .filter:hover {
   border-color: var(--coral);
-  background: var(--coral);
+  background: linear-gradient(135deg, var(--coral), var(--rose));
   color: var(--white);
 }
 
@@ -328,16 +416,16 @@ button {
 
 .recipe-card {
   position: relative;
-  min-height: 280px;
+  min-height: 290px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   padding: 26px;
 
-  background: rgba(255,251,245,.82);
-  border: 1px solid rgba(74,54,48,.12);
+  background: rgba(255,251,245,.92);
+  border: 1px solid rgba(74,54,48,.1);
   border-radius: 20px;
-  box-shadow: 0 10px 24px rgba(74,54,48,.08);
+  box-shadow: 0 10px 24px rgba(74,54,48,.1);
 
   animation: rise .5s ease-out both;
   transition: transform .18s ease, box-shadow .18s ease;
@@ -345,7 +433,7 @@ button {
 
 .recipe-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 16px 30px rgba(74,54,48,.14);
+  box-shadow: 0 16px 30px rgba(74,54,48,.16);
 }
 
 .recipe-card:nth-child(2) {
@@ -358,7 +446,7 @@ button {
 
 .recipe-card h3 {
   max-width: 85%;
-  margin: 12px 0 10px;
+  margin: 12px 0 6px;
   color: var(--deep);
   font: 600 1.5rem/1.1 'Playfair Display', serif;
 }
@@ -374,7 +462,14 @@ button {
   text-transform: uppercase;
 }
 
-.recipe-card p {
+.card-from {
+  margin: 6px 0 10px;
+  color: var(--sage);
+  font: 600 .95rem 'Caveat', cursive;
+  letter-spacing: .01em;
+}
+
+.recipe-card p:not(.card-from) {
   margin: 0;
   color: rgba(74,54,48,.78);
   font-size: .8rem;
@@ -429,9 +524,13 @@ button {
 }
 
 .empty-state {
-  padding: 50px 0;
+  padding: 30px 24px;
+  border-radius: 20px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   text-align: center;
-  color: rgba(74,54,48,.6);
+  color: rgba(74,54,48,.7);
   font-style: italic;
 }
 
@@ -440,8 +539,13 @@ button {
    ========================= */
 
 .site-footer {
-  padding: 35px 5vw;
-  border-top: 1px solid var(--line);
+  max-width: 1180px;
+  margin: 0 auto 30px;
+  padding: 18px 5vw;
+  border-radius: 999px;
+  background: var(--glass);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
   text-align: center;
   color: rgba(74,54,48,.55);
   font: 500 .6rem 'DM Mono', monospace;
@@ -522,7 +626,7 @@ button {
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 11px 13px;
-  background: rgba(253,245,236,.5);
+  background: rgba(253,243,234,.5);
   color: var(--ink);
   font: .8rem 'Libre Baskerville', serif;
   transition: border-color .15s ease;
@@ -590,10 +694,16 @@ button {
 
 .detail-content h2 {
   max-width: 620px;
-  margin: 18px 0 12px;
+  margin: 18px 0 4px;
   color: var(--deep);
   font: 600 clamp(2rem,4.5vw,3.6rem)/1.05 'Playfair Display', serif;
   letter-spacing: -.02em;
+}
+
+.detail-from {
+  margin: 0 0 14px;
+  color: var(--sage);
+  font: 600 1.35rem 'Caveat', cursive;
 }
 
 .detail-note {
@@ -727,7 +837,7 @@ button {
   border: 1px solid var(--line);
   border-radius: 12px;
   padding: 11px 13px;
-  background: rgba(253,245,236,.5);
+  background: rgba(253,243,234,.5);
   font: 500 .72rem 'DM Mono', monospace;
 }
 
@@ -798,6 +908,8 @@ button {
   .site-header {
     align-items: start;
     gap: 20px;
+    border-radius: 24px;
+    margin: 14px 4vw 0;
   }
 
   .header-actions {
@@ -812,12 +924,21 @@ button {
 
   .hero {
     display: block;
-    padding-top: 70px;
+    padding-top: 60px;
+  }
+
+  .hero-monogram {
+    display: none;
+  }
+
+  .hero-copy {
+    padding: 26px 24px;
   }
 
   .hero-note {
     text-align: left;
-    margin-top: 32px;
+    display: inline-block;
+    margin-top: 20px;
   }
 
   .recipe-grid {
@@ -841,7 +962,7 @@ button {
 @media (max-width:480px) {
 
   .site-header {
-    padding: 20px 6vw;
+    padding: 18px 6vw;
   }
 
   .brand {
@@ -856,7 +977,7 @@ button {
     flex-wrap: nowrap;
     gap: 10px;
     overflow-x: auto;
-    padding-bottom: 4px;
+    padding: 12px 14px;
   }
 
   .filter {
@@ -870,7 +991,7 @@ button {
   }
 
   .hero h1 {
-    font-size: 3.4rem;
+    font-size: 3rem;
   }
 
   .form-row {
@@ -896,52 +1017,6 @@ button {
 
   .detail-meta {
     gap: 8px;
-  }
-
-  /*
-   * MOBILE PHOTO
-   *
-   * The important part:
-   * - center the photo
-   * - show the couple clearly
-   * - remove the heavy beige wash
-   */
-
-  .recipe-app {
-    background-image:
-      linear-gradient(
-        rgba(253,245,236,.45),
-        rgba(253,245,236,.6)
-      ),
-      url('celebration-background.jpg');
-
-    background-position: 40% center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-  }
-
-  .access-gate {
-    background-image:
-      linear-gradient(
-        rgba(253,245,236,.45),
-        rgba(253,245,236,.6)
-      ),
-      url('celebration-background.jpg');
-
-    background-position: center center;
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-attachment: scroll;
-  }
-
-  /*
-   * Make the recipe cards slightly transparent
-   * so the picture can still be seen behind them.
-   */
-
-  .recipe-card {
-    background: rgba(255,251,245,.75);
   }
 
   .undo-bar {
