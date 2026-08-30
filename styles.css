@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap&family=Libre+Baskerville:ital,wght@0,400;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Caveat:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&family=DM+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Caveat:wght@500;600;700&display=swap');
 
 :root {
   --paper: #fdf3ea;
@@ -325,6 +325,10 @@ button {
   text-transform: uppercase;
 }
 
+.eyebrow {
+  font-family: 'DM Mono', monospace;
+}
+
 .eyebrow span {
   margin-right: 10px;
 }
@@ -516,8 +520,10 @@ button {
 
 .card-bottom {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   align-items: center;
+  row-gap: 8px;
   margin-top: 22px;
   padding-top: 15px;
   border-top: 1px dashed var(--line);
@@ -530,7 +536,7 @@ button {
   padding: 0;
   background: transparent;
   color: var(--coral);
-  font: 600 .6rem 'Exo 2', sans-serif;
+  font: 600 .6rem 'DM Mono', monospace;
   text-transform: uppercase;
   transition: color .15s ease;
 }
@@ -586,7 +592,7 @@ button {
   -webkit-backdrop-filter: blur(16px);
   text-align: center;
   color: rgba(74,54,48,.55);
-  font: 500 .6rem 'Exo 2', sans-serif;
+  font: 500 .6rem 'DM Mono', monospace;
   letter-spacing: .1em;
   text-transform: uppercase;
 }
@@ -1043,6 +1049,12 @@ dialog[open] {
 
   .hero h1 {
     font-size: 3rem;
+  }
+
+  .eyebrow {
+    font-size: .6rem;
+    letter-spacing: .06em;
+    line-height: 1.6;
   }
 
   .form-row {
