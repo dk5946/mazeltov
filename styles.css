@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Caveat:wght@500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,100..900;1,100..900&display=swap&family=Libre+Baskerville:ital,wght@0,400;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Caveat:wght@500;600;700&display=swap');
 
 :root {
   --paper: #fdf3ea;
@@ -12,7 +12,7 @@
   --blush-strong: #f0c9bb;
   --line: rgba(74,54,48,.16);
   --white: #fffbf5;
-  --glass: rgba(255,251,245,.78);
+  --glass: rgba(255,251,245,.5);
 }
 
 * {
@@ -59,8 +59,8 @@ body::before {
   background-color: var(--paper);
   background-image:
     linear-gradient(
-      rgba(253,243,234,.22),
-      rgba(253,243,234,.3)
+      rgba(253,243,234,.12),
+      rgba(253,243,234,.18)
     ),
     url('celebration-background.jpg');
 
@@ -113,8 +113,8 @@ body > *:not(dialog) {
   padding: 40px 44px;
   border-radius: 28px;
   background: var(--glass);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 20px 50px rgba(74,54,48,.14);
 }
 
@@ -170,8 +170,8 @@ body.is-authenticated .recipe-app {
   padding: 16px 5vw;
   border-radius: 999px;
   background: var(--glass);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 8px 24px rgba(74,54,48,.1);
 }
 
@@ -209,8 +209,8 @@ body.is-authenticated .recipe-app {
   display: block;
   margin: 3px 0 0 2px;
   color: rgba(74,54,48,.55);
-  font: 500 .55rem 'DM Mono', monospace;
-  letter-spacing: .16em;
+  font: 500 .55rem 'Exo 2', sans-serif;
+  letter-spacing: .1em;
   text-transform: uppercase;
 }
 
@@ -248,7 +248,7 @@ body.is-authenticated .recipe-app {
 }
 
 button {
-  font-family: 'DM Mono', monospace;
+  font-family: 'Exo 2', sans-serif;
   cursor: pointer;
 }
 
@@ -310,8 +310,8 @@ button {
   padding: 32px 36px;
   border-radius: 28px;
   background: var(--glass);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   box-shadow: 0 16px 40px rgba(74,54,48,.1);
 }
 
@@ -320,8 +320,8 @@ button {
   display: inline-flex;
   align-items: center;
   color: var(--coral);
-  font: 600 .68rem 'DM Mono', monospace;
-  letter-spacing: .16em;
+  font: 600 .68rem 'Exo 2', sans-serif;
+  letter-spacing: .1em;
   text-transform: uppercase;
 }
 
@@ -334,6 +334,7 @@ button {
   color: var(--deep);
   font: 700 clamp(2.6rem,6vw,5.6rem)/1 'Playfair Display', serif;
   letter-spacing: -.03em;
+  text-shadow: 0 2px 20px rgba(255,251,245,.7);
 }
 
 .hero h1 em {
@@ -355,10 +356,10 @@ button {
   padding: 10px 16px;
   border-radius: 999px;
   background: var(--glass);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   color: var(--sage);
-  font: 500 .65rem/1.7 'DM Mono', monospace;
+  font: 500 .65rem/1.7 'Exo 2', sans-serif;
   letter-spacing: .1em;
   text-align: right;
 }
@@ -385,8 +386,8 @@ button {
   padding: 22px 28px;
   border-radius: 24px;
   background: var(--glass);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .section-heading h2 {
@@ -395,12 +396,19 @@ button {
   font: 600 clamp(1.7rem,2.8vw,2.5rem) 'Playfair Display', serif;
 }
 
+#collection-title {
+  font-family: 'Exo 2', sans-serif;
+  font-weight: 600;
+  letter-spacing: -.01em;
+  text-shadow: 0 2px 16px rgba(255,251,245,.7);
+}
+
 .kicker {
   margin: 0;
 }
 
 .recipe-count {
-  font: 500 .65rem 'DM Mono', monospace;
+  font: 500 .65rem 'Exo 2', sans-serif;
   text-transform: uppercase;
   color: rgba(74,54,48,.5);
 }
@@ -413,8 +421,8 @@ button {
   padding: 14px 16px;
   border-radius: 999px;
   background: var(--glass);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
 }
 
 .filter {
@@ -450,7 +458,9 @@ button {
   justify-content: space-between;
   padding: 26px;
 
-  background: rgba(255,251,245,.92);
+  background: rgba(255,251,245,.68);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   border: 1px solid rgba(74,54,48,.1);
   border-radius: 20px;
   box-shadow: 0 10px 24px rgba(74,54,48,.1);
@@ -485,7 +495,7 @@ button {
   border-radius: 999px;
   background: var(--blush);
   color: var(--deep);
-  font: 600 .58rem 'DM Mono', monospace;
+  font: 600 .58rem 'Exo 2', sans-serif;
   letter-spacing: .08em;
   text-transform: uppercase;
 }
@@ -511,7 +521,7 @@ button {
   margin-top: 22px;
   padding-top: 15px;
   border-top: 1px dashed var(--line);
-  font: 500 .6rem 'DM Mono', monospace;
+  font: 500 .6rem 'Exo 2', sans-serif;
   color: rgba(74,54,48,.55);
 }
 
@@ -520,7 +530,7 @@ button {
   padding: 0;
   background: transparent;
   color: var(--coral);
-  font: 600 .6rem 'DM Mono', monospace;
+  font: 600 .6rem 'Exo 2', sans-serif;
   text-transform: uppercase;
   transition: color .15s ease;
 }
@@ -555,8 +565,8 @@ button {
   padding: 30px 24px;
   border-radius: 20px;
   background: var(--glass);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   text-align: center;
   color: rgba(74,54,48,.7);
   font-style: italic;
@@ -572,11 +582,11 @@ button {
   padding: 18px 5vw;
   border-radius: 999px;
   background: var(--glass);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   text-align: center;
   color: rgba(74,54,48,.55);
-  font: 500 .6rem 'DM Mono', monospace;
+  font: 500 .6rem 'Exo 2', sans-serif;
   letter-spacing: .1em;
   text-transform: uppercase;
 }
@@ -653,7 +663,7 @@ dialog[open] {
   display: block;
   margin: 16px 0;
   color: var(--deep);
-  font: 600 .62rem 'DM Mono', monospace;
+  font: 600 .62rem 'Exo 2', sans-serif;
   letter-spacing: .06em;
   text-transform: uppercase;
 }
@@ -769,7 +779,7 @@ dialog[open] {
   border-radius: 999px;
   background: var(--blush);
   color: var(--deep);
-  font: 600 .62rem 'DM Mono', monospace;
+  font: 600 .62rem 'Exo 2', sans-serif;
   letter-spacing: .05em;
   text-transform: uppercase;
 }
@@ -801,7 +811,7 @@ dialog[open] {
 
 .detail-columns ol li::marker {
   color: var(--coral);
-  font-family: 'DM Mono', monospace;
+  font-family: 'Exo 2', sans-serif;
   font-size: .72rem;
   font-weight: 600;
 }
@@ -827,7 +837,7 @@ dialog[open] {
   background: var(--deep);
   color: var(--paper);
 
-  font: 500 .68rem 'DM Mono', monospace;
+  font: 500 .68rem 'Exo 2', sans-serif;
 
   box-shadow: 0 10px 26px rgba(74,54,48,.3);
 }
@@ -842,7 +852,7 @@ dialog[open] {
   padding: 0 0 3px;
   background: transparent;
   color: var(--sun);
-  font: 600 .64rem 'DM Mono', monospace;
+  font: 600 .64rem 'Exo 2', sans-serif;
   text-transform: uppercase;
 }
 
@@ -879,7 +889,7 @@ dialog[open] {
   border-radius: 12px;
   padding: 11px 13px;
   background: rgba(253,243,234,.5);
-  font: 500 .72rem 'DM Mono', monospace;
+  font: 500 .72rem 'Exo 2', sans-serif;
 }
 
 .delete-dialog input:focus {
