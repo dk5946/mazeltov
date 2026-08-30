@@ -47,11 +47,6 @@ body {
    in frame even on narrow phone screens (checked
    against the actual photo's proportions) — any
    cropping falls on the far left/right edges.
-
-   A slow, continuous zoom/pan (like a screensaver's
-   "Ken Burns" effect) keeps it feeling alive instead
-   of static — very gentle, so it never distracts
-   from the recipes on top.
    ========================= */
 
 body::before {
@@ -73,30 +68,11 @@ body::before {
   background-position: 20% center;
   background-size: cover;
 
-  transform-origin: 20% 40%;
-  animation: photo-drift 36s ease-in-out infinite alternate;
-
   pointer-events: none;
   z-index: 0;
 }
 
-@keyframes photo-drift {
-  from {
-    transform: scale(1);
-  }
-
-  to {
-    transform: scale(1.1);
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  body::before {
-    animation: none;
-  }
-}
-
-body > * {
+body > *:not(dialog) {
   position: relative;
   z-index: 1;
 }
@@ -221,6 +197,12 @@ body.is-authenticated .recipe-app {
   height: auto;
   margin-right: 12px;
   vertical-align: middle;
+}
+
+.brand-name {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.2;
 }
 
 .brand small {
@@ -607,6 +589,19 @@ button {
 /* =========================
    DIALOGS
    ========================= */
+
+dialog {
+  z-index: 20;
+}
+
+dialog[open] {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0;
+  overflow-y: auto;
+}
 
 .recipe-dialog {
   width: min(590px,92vw);
