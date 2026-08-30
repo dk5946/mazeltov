@@ -100,7 +100,7 @@ const starterRecipes = [
       "Let rise until doubled.",
       "Braid, brush with egg, and bake at 350°F until golden."
     ],
-    tags: ["Dairy-free", "Pareve"],
+    tags: ["Dairy-free", "Parve"],
     photoUrl: ""
   },
 
