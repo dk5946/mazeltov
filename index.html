@@ -90,7 +90,7 @@
 
         <div>
           <p class="kicker">The collection</p>
-          <h2 id="collection-title">From our kitchen to yours</h2>
+          <h2 id="collection-title">From our <em>kitchen</em> to yours</h2>
         </div>
 
         <p class="recipe-count" id="recipe-count">
@@ -279,17 +279,29 @@
 
 
         <label>
-          Time
+          Makes
           <span class="field-hint">optional</span>
 
           <input
-            name="time"
-            maxlength="30"
-            placeholder="45 min"
+            name="makes"
+            maxlength="50"
+            placeholder="e.g. 12 cookies"
           >
         </label>
 
       </div>
+
+
+      <label>
+        Cook time
+        <span class="field-hint">optional — one per line, e.g. Prep / Cook / Total</span>
+
+        <textarea
+          name="time"
+          rows="3"
+          placeholder="Prep: 15 min&#10;Cook: 40 min&#10;Total: 55 min"
+        ></textarea>
+      </label>
 
 
       <label>
@@ -318,26 +330,14 @@
 
 
       <label>
-        Makes
-        <span class="field-hint">optional</span>
-
-        <input
-          name="makes"
-          maxlength="50"
-          placeholder="e.g. 12 cookies"
-        >
-      </label>
-
-
-      <label>
         Ingredients
-        <span class="field-hint">one per line</span>
+        <span class="field-hint">one per line — end a line with a colon to start a new section, e.g. "Dressing:"</span>
 
         <textarea
           name="ingredients"
           required
-          rows="5"
-          placeholder="2 cups flour&#10;1 tsp salt&#10;..."
+          rows="6"
+          placeholder="2 cups flour&#10;1 tsp salt&#10;&#10;Dressing:&#10;2 tbsp olive oil&#10;1 tbsp vinegar"
         ></textarea>
       </label>
 
@@ -476,7 +476,7 @@
 
       <div class="detail-meta">
 
-        <span id="detail-time"></span>
+        <div id="detail-time" class="detail-time-group"></div>
 
         <span id="detail-ingredients-count"></span>
 
