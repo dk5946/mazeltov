@@ -42,35 +42,23 @@ body::before {
   inset: 0;
   width: 100vw;
   height: 100dvh;
-
+  background-color: var(--paper);
   background-image:
     linear-gradient(
-      rgba(253,243,234,.15),
-      rgba(253,243,234,.15)
+      rgba(253,243,234,.22),
+      rgba(253,243,234,.3)
     ),
     url('celebration-background.jpg');
-
   background-repeat: no-repeat;
   background-position: center center;
-
-  /* Keeps the entire photo visible.
-     The photo is only as tall as the screen. */
   background-size: contain;
-
-  z-index: 0;
   pointer-events: none;
+  z-index: 0;
 }
 
-/* Put the actual website above the photo */
 body > * {
   position: relative;
   z-index: 1;
-}
-
-/* Website itself stays transparent */
-.access-gate,
-.recipe-app {
-  background: transparent;
 }
 
 /* =========================
