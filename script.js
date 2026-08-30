@@ -22,6 +22,13 @@ import {
   signInAnonymously
 } from "https://www.gstatic.com/firebasejs/12.1.0/firebase-auth.js";
 
+import {
+  getStorage,
+  ref,
+  uploadBytes,
+  getDownloadURL
+} from "https://www.gstatic.com/firebasejs/12.1.0/firebase-storage.js";
+
 
 // =========================
 // FIREBASE CONFIG
@@ -42,6 +49,8 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 const auth = getAuth(app);
+
+const storage = getStorage(app);
 
 
 // =========================
@@ -90,7 +99,9 @@ const starterRecipes = [
       "Mix and knead until smooth.",
       "Let rise until doubled.",
       "Braid, brush with egg, and bake at 350°F until golden."
-    ]
+    ],
+    tags: ["Dairy-free", "Pareve"],
+    photoUrl: ""
   },
 
   {
@@ -112,7 +123,9 @@ const starterRecipes = [
       "Season the chicken generously.",
       "Roast with lemon and herbs at 425°F.",
       "Rest for 10 minutes before serving."
-    ]
+    ],
+    tags: ["Gluten-free", "Dairy-free"],
+    photoUrl: ""
   },
 
   {
@@ -134,7 +147,9 @@ const starterRecipes = [
       "Whisk wet ingredients together.",
       "Fold in flour and zest.",
       "Bake at 350°F until golden and springy."
-    ]
+    ],
+    tags: ["Dairy-free", "Pareve", "Vegetarian"],
+    photoUrl: ""
   }
 ];
 
@@ -147,11 +162,23 @@ let recipes = [];
 
 let activeFilter = "All";
 
+let activeTags = new Set();
+
+let sortBy = "newest";
+
 let lastDeletedRecipe = null;
+
+let undoTimeoutId = null;
 
 let deleteTargetId = null;
 
 let editingRecipeId = null;
+
+let editingPhotoUrl = "";
+
+let formIsDirty = false;
+
+let currentDetailRecipe = null;
 
 
 // =========================
@@ -285,7 +312,15 @@ async function loadRecipes() {
               : [],
 
         createdAt:
-          data.createdAt || null
+          data.createdAt || null,
+
+        tags:
+          Array.isArray(data.tags)
+            ? data.tags
+            : [],
+
+        photoUrl:
+          data.photoUrl || ""
       };
     });
 
@@ -317,6 +352,9 @@ async function loadRecipes() {
       "Could not load recipes:",
       error
     );
+
+    grid.innerHTML =
+      `<p class="loading-state">Couldn't load recipes — check your Firebase Firestore setup.</p>`;
 
     alert(
       "Could not load recipes. Please check your Firebase Firestore setup."
@@ -351,6 +389,169 @@ function matchesSmartSearch(searchableText, query) {
 
 
 // =========================
+// INGREDIENT SCALING
+// Reads a leading quantity off an ingredient line (a
+// whole number, decimal, fraction, or mixed number),
+// so it can be multiplied for the servings scaler.
+// Section headings and lines with no leading number
+// (e.g. "Salt to taste") are left untouched.
+// =========================
+
+function parseLeadingQuantity(line) {
+
+  const mixedMatch =
+    line.match(/^(\d+)\s+(\d+)\/(\d+)/);
+
+  if (mixedMatch) {
+    const whole = parseInt(mixedMatch[1], 10);
+    const num = parseInt(mixedMatch[2], 10);
+    const den = parseInt(mixedMatch[3], 10);
+
+    return {
+      value: whole + (num / den),
+      matchLength: mixedMatch[0].length
+    };
+  }
+
+  const fractionMatch =
+    line.match(/^(\d+)\/(\d+)/);
+
+  if (fractionMatch) {
+    const num = parseInt(fractionMatch[1], 10);
+    const den = parseInt(fractionMatch[2], 10);
+
+    return {
+      value: num / den,
+      matchLength: fractionMatch[0].length
+    };
+  }
+
+  const numberMatch =
+    line.match(/^(\d+(?:\.\d+)?)/);
+
+  if (numberMatch) {
+    return {
+      value: parseFloat(numberMatch[1]),
+      matchLength: numberMatch[0].length
+    };
+  }
+
+  return null;
+}
+
+function formatQuantity(num) {
+
+  const rounded =
+    Math.round(num * 100) / 100;
+
+  if (Number.isInteger(rounded)) {
+    return String(rounded);
+  }
+
+  const whole = Math.floor(rounded);
+  const frac = rounded - whole;
+
+  const knownFractions = [
+    [0.25, "1/4"],
+    [0.33, "1/3"],
+    [0.5, "1/2"],
+    [0.67, "2/3"],
+    [0.75, "3/4"]
+  ];
+
+  for (const [decimal, label] of knownFractions) {
+    if (Math.abs(frac - decimal) < 0.02) {
+      return whole > 0 ? `${whole} ${label}` : label;
+    }
+  }
+
+  return String(rounded);
+}
+
+function renderIngredientsList(recipe, scale) {
+
+  const ingredients =
+    Array.isArray(recipe.ingredients)
+      ? recipe.ingredients
+      : [];
+
+  const list =
+    document.querySelector("#detail-ingredients");
+
+  if (!list) return;
+
+  list.innerHTML =
+    ingredients
+      .map((line) => {
+
+        const trimmed = line.trim();
+        const isHeading = trimmed.endsWith(":");
+
+        if (isHeading) {
+          return `<li class="ingredient-heading">${escapeHtml(trimmed.slice(0, -1))}</li>`;
+        }
+
+        if (scale === 1) {
+          return `<li>${escapeHtml(line)}</li>`;
+        }
+
+        const parsed = parseLeadingQuantity(line);
+
+        if (!parsed) {
+          return `<li>${escapeHtml(line)}</li>`;
+        }
+
+        const scaledLine =
+          formatQuantity(parsed.value * scale) +
+          line.slice(parsed.matchLength);
+
+        return `<li>${escapeHtml(scaledLine)}</li>`;
+      })
+      .join("");
+}
+
+
+// =========================
+// COOK TIME (FOR SORTING)
+// Roughly estimates total minutes from the first time
+// entry (e.g. "2 hr 30 min", "45 min") so recipes can
+// be sorted quickest-first. Unparseable or missing
+// times sort to the end.
+// =========================
+
+function estimateMinutes(recipe) {
+
+  const first =
+    Array.isArray(recipe.time) ? recipe.time[0] : null;
+
+  if (!first) return Infinity;
+
+  const hourMatch =
+    first.match(/(\d+(?:\.\d+)?)\s*(?:hr|hour)/i);
+
+  const minuteMatch =
+    first.match(/(\d+(?:\.\d+)?)\s*min/i);
+
+  if (!hourMatch && !minuteMatch) {
+
+    const bareNumber =
+      first.match(/(\d+(?:\.\d+)?)/);
+
+    return bareNumber
+      ? parseFloat(bareNumber[1])
+      : Infinity;
+  }
+
+  let minutes = 0;
+
+  if (hourMatch) minutes += parseFloat(hourMatch[1]) * 60;
+  if (minuteMatch) minutes += parseFloat(minuteMatch[1]);
+
+  return minutes;
+}
+
+
+// =========================
 // RENDER RECIPES
 // =========================
 
@@ -366,6 +567,14 @@ function renderRecipes() {
       const matchesFilter =
         activeFilter === "All" ||
         recipe.category === activeFilter;
+
+
+      const recipeTags =
+        Array.isArray(recipe.tags) ? recipe.tags : [];
+
+      const matchesTags =
+        activeTags.size === 0 ||
+        recipeTags.some((tag) => activeTags.has(tag));
 
 
       const searchableText = [
@@ -384,12 +593,34 @@ function renderRecipes() {
         matchesSmartSearch(searchableText, query);
 
 
-      return matchesFilter && matchesSearch;
+      return matchesFilter && matchesTags && matchesSearch;
     });
 
 
+  if (sortBy === "az") {
+
+    visibleRecipes.sort((a, b) =>
+      (a.name || "").localeCompare(b.name || "")
+    );
+
+  } else if (sortBy === "time") {
+
+    visibleRecipes.sort((a, b) =>
+      estimateMinutes(a) - estimateMinutes(b)
+    );
+
+  } else {
+
+    visibleRecipes.sort((a, b) =>
+      (b.createdAt || 0) - (a.createdAt || 0)
+    );
+  }
+
+
   const isFiltered =
-    activeFilter !== "All" || query.length > 0;
+    activeFilter !== "All" ||
+    activeTags.size > 0 ||
+    query.length > 0;
 
   count.textContent =
     isFiltered
@@ -436,6 +667,11 @@ function renderRecipes() {
         const recipeFrom =
           escapeHtml(recipe.from || "");
 
+        const recipeTags =
+          Array.isArray(recipe.tags)
+            ? recipe.tags
+            : [];
+
 
         return `
           <article class="recipe-card">
@@ -448,6 +684,12 @@ function renderRecipes() {
             >
               ×
             </button>
+
+            ${
+              recipe.photoUrl
+                ? `<img class="card-photo" src="${escapeHtml(recipe.photoUrl)}" alt="">`
+                : ``
+            }
 
             <div>
 
@@ -468,6 +710,12 @@ function renderRecipes() {
               <p>
                 ${note}
               </p>
+
+              ${
+                recipeTags.length
+                  ? `<div class="card-tags">${recipeTags.map((tag) => `<span class="tag-pill">${escapeHtml(tag)}</span>`).join("")}</div>`
+                  : ``
+              }
 
             </div>
 
@@ -537,6 +785,56 @@ document
 
 
 // =========================
+// TAG FILTERS
+// Multi-select — clicking a tag toggles it on or off;
+// a recipe matches if it has any of the selected tags.
+// =========================
+
+document
+  .querySelectorAll("[data-tag-filter]")
+  .forEach((button) => {
+
+    button.addEventListener("click", () => {
+
+      const tag =
+        button.dataset.tagFilter;
+
+      if (activeTags.has(tag)) {
+        activeTags.delete(tag);
+      } else {
+        activeTags.add(tag);
+      }
+
+      button.classList.toggle(
+        "is-active",
+        activeTags.has(tag)
+      );
+
+      renderRecipes();
+    });
+
+  });
+
+
+// =========================
+// SORT
+// =========================
+
+const sortSelect =
+  document.querySelector("#recipe-sort");
+
+if (sortSelect) {
+
+  sortSelect.addEventListener("change", () => {
+
+    sortBy = sortSelect.value;
+
+    renderRecipes();
+  });
+}
+
+
+// =========================
 // SEARCH
 // =========================
 
@@ -556,7 +854,19 @@ document
 
     editingRecipeId = null;
 
+    editingPhotoUrl = "";
+
     form.reset();
+
+    formIsDirty = false;
+
+
+    const currentPhotoWrap =
+      document.querySelector("#current-photo-wrap");
+
+    if (currentPhotoWrap) {
+      currentPhotoWrap.hidden = true;
+    }
 
 
     const title =
@@ -573,6 +883,22 @@ document
 
 
 // =========================
+// TRACK UNSAVED CHANGES
+// =========================
+
+form.addEventListener("input", () => {
+  formIsDirty = true;
+});
+
+function confirmDiscardIfDirty() {
+  return (
+    !formIsDirty ||
+    confirm("Discard your changes to this recipe?")
+  );
+}
+
+
+// =========================
 // CLOSE ADD / EDIT
 // =========================
 
@@ -580,10 +906,28 @@ document
   .querySelector("[data-close-form]")
   .addEventListener("click", () => {
 
+    if (!confirmDiscardIfDirty()) {
+      return;
+    }
+
     dialog.close();
 
     editingRecipeId = null;
+
+    formIsDirty = false;
   });
+
+dialog.addEventListener("cancel", (event) => {
+
+  if (!confirmDiscardIfDirty()) {
+    event.preventDefault();
+    return;
+  }
+
+  editingRecipeId = null;
+
+  formIsDirty = false;
+});
 
 
 // =========================
@@ -701,6 +1045,43 @@ grid.addEventListener("click", (event) => {
         : "";
 
 
+    form
+      .querySelectorAll('input[name="tags"]')
+      .forEach((checkbox) => {
+
+        checkbox.checked =
+          Array.isArray(recipe.tags) &&
+          recipe.tags.includes(checkbox.value);
+      });
+
+
+    editingPhotoUrl =
+      recipe.photoUrl || "";
+
+    const currentPhotoWrap =
+      document.querySelector("#current-photo-wrap");
+
+    const currentPhotoPreview =
+      document.querySelector("#current-photo-preview");
+
+    if (currentPhotoWrap && currentPhotoPreview) {
+
+      if (editingPhotoUrl) {
+        currentPhotoPreview.src = editingPhotoUrl;
+        currentPhotoWrap.hidden = false;
+      } else {
+        currentPhotoWrap.hidden = true;
+      }
+    }
+
+    if (form.elements.removePhoto) {
+      form.elements.removePhoto.checked = false;
+    }
+
+
+    formIsDirty = false;
+
+
     const title =
       dialog.querySelector("#form-title");
 
@@ -734,6 +1115,29 @@ grid.addEventListener("click", (event) => {
 
 
     if (!recipe) return;
+
+
+    currentDetailRecipe = recipe;
+
+
+    // PHOTO
+
+    const detailPhoto =
+      document.querySelector(
+        "#detail-photo"
+      );
+
+    if (detailPhoto) {
+
+      if (recipe.photoUrl) {
+        detailPhoto.src = recipe.photoUrl;
+        detailPhoto.alt = recipe.name || "";
+        detailPhoto.hidden = false;
+      } else {
+        detailPhoto.hidden = true;
+        detailPhoto.src = "";
+      }
+    }
 
 
     // CATEGORY
@@ -841,23 +1245,18 @@ grid.addEventListener("click", (event) => {
 
 
     if (detailIngredients) {
-
-      detailIngredients.innerHTML =
-        ingredients
-          .map((ingredient) => {
-
-            const trimmed =
-              ingredient.trim();
-
-            const isHeading =
-              trimmed.endsWith(":");
-
-            return isHeading
-              ? `<li class="ingredient-heading">${escapeHtml(trimmed.slice(0, -1))}</li>`
-              : `<li>${escapeHtml(ingredient)}</li>`;
-          })
-          .join("");
+      renderIngredientsList(recipe, 1);
     }
+
+    document
+      .querySelectorAll(".scale-button")
+      .forEach((button) => {
+
+        button.classList.toggle(
+          "is-active",
+          button.dataset.scale === "1"
+        );
+      });
 
 
     // DIRECTIONS
@@ -923,6 +1322,30 @@ grid.addEventListener("click", (event) => {
 
       detailMakes.hidden =
         !recipe.makes;
+    }
+
+
+    // TAGS
+
+    const detailTags =
+      document.querySelector(
+        "#detail-tags"
+      );
+
+    if (detailTags) {
+
+      const tags =
+        Array.isArray(recipe.tags)
+          ? recipe.tags
+          : [];
+
+      detailTags.innerHTML =
+        tags
+          .map(
+            (tag) =>
+              `<span>${escapeHtml(tag)}</span>`
+          )
+          .join("");
     }
 
 
@@ -1000,11 +1423,47 @@ form.addEventListener(
         )
           .split("\n")
           .map((item) => item.trim())
-          .filter(Boolean)
+          .filter(Boolean),
+
+      tags:
+        Array.from(
+          form.querySelectorAll('input[name="tags"]:checked')
+        ).map((checkbox) => checkbox.value)
     };
 
 
     try {
+
+      // =========================
+      // PHOTO UPLOAD / REMOVAL
+      // =========================
+
+      const photoFile =
+        form.elements.photo &&
+        form.elements.photo.files[0];
+
+      const removePhoto =
+        form.elements.removePhoto &&
+        form.elements.removePhoto.checked;
+
+      let photoUrl =
+        removePhoto ? "" : editingPhotoUrl;
+
+      if (photoFile) {
+
+        const photoRef =
+          ref(
+            storage,
+            `recipe-photos/${Date.now()}-${photoFile.name}`
+          );
+
+        await uploadBytes(photoRef, photoFile);
+
+        photoUrl = await getDownloadURL(photoRef);
+      }
+
+      recipeData.photoUrl = photoUrl;
+
 
       // =========================
       // EDIT EXISTING RECIPE
@@ -1069,12 +1528,26 @@ form.addEventListener(
 
       editingRecipeId = null;
 
+      editingPhotoUrl = "";
+
+      formIsDirty = false;
+
       form.reset();
 
       dialog.close();
 
 
+      const currentPhotoWrap =
+        document.querySelector("#current-photo-wrap");
+
+      if (currentPhotoWrap) {
+        currentPhotoWrap.hidden = true;
+      }
+
+
       activeFilter = "All";
+
+      activeTags.clear();
 
 
       document
@@ -1086,6 +1559,13 @@ form.addEventListener(
             item.dataset.filter === "All"
           );
 
+        });
+
+      document
+        .querySelectorAll("[data-tag-filter]")
+        .forEach((item) => {
+
+          item.classList.remove("is-active");
         });
 
 
@@ -1101,7 +1581,7 @@ form.addEventListener(
 
 
       alert(
-        "Could not save the recipe. Please check your Firebase Firestore setup."
+        "Could not save the recipe. Please check your Firebase Firestore and Storage setup."
       );
     }
 
@@ -1175,6 +1655,15 @@ deleteForm.addEventListener(
 
       undoBar.hidden = false;
 
+      clearTimeout(undoTimeoutId);
+
+      undoTimeoutId = setTimeout(() => {
+
+        undoBar.hidden = true;
+
+        lastDeletedRecipe = null;
+      }, 8000);
+
 
       deleteDialog.close();
 
@@ -1208,6 +1697,8 @@ undoButton.addEventListener(
   async () => {
 
     if (!lastDeletedRecipe) return;
+
+    clearTimeout(undoTimeoutId);
 
 
     try {
@@ -1270,6 +1761,52 @@ document
     );
 
   });
+
+
+// =========================
+// SERVINGS SCALER
+// =========================
+
+document
+  .querySelectorAll(".scale-button")
+  .forEach((button) => {
+
+    button.addEventListener("click", () => {
+
+      if (!currentDetailRecipe) return;
+
+      const scale =
+        parseFloat(button.dataset.scale);
+
+      document
+        .querySelectorAll(".scale-button")
+        .forEach((item) => {
+
+          item.classList.toggle(
+            "is-active",
+            item === button
+          );
+        });
+
+      renderIngredientsList(currentDetailRecipe, scale);
+    });
+
+  });
+
+
+// =========================
+// PRINT RECIPE
+// =========================
+
+const printButton =
+  document.querySelector("#print-recipe");
+
+if (printButton) {
+
+  printButton.addEventListener("click", () => {
+    window.print();
+  });
+}
 
 
 // =========================
