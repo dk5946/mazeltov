@@ -100,7 +100,7 @@ const starterRecipes = [
       "Let rise until doubled.",
       "Braid, brush with egg, and bake at 350°F until golden."
     ],
-    tags: ["Dairy-free", "Parve"],
+    tags: ["Parve", "Shabbos"],
     photoUrl: ""
   },
 
@@ -124,7 +124,7 @@ const starterRecipes = [
       "Roast with lemon and herbs at 425°F.",
       "Rest for 10 minutes before serving."
     ],
-    tags: ["Gluten-free", "Dairy-free"],
+    tags: ["Parve"],
     photoUrl: ""
   },
 
@@ -148,7 +148,7 @@ const starterRecipes = [
       "Fold in flour and zest.",
       "Bake at 350°F until golden and springy."
     ],
-    tags: ["Dairy-free", "Pareve", "Vegetarian"],
+    tags: ["Parve", "Pesach"],
     photoUrl: ""
   }
 ];
@@ -398,6 +398,36 @@ function matchesSmartSearch(searchableText, query) {
 // =========================
 
 function parseLeadingQuantity(line) {
+
+  const vulgarFractions = {
+    "½": 1 / 2, "⅓": 1 / 3, "⅔": 2 / 3,
+    "¼": 1 / 4, "¾": 3 / 4,
+    "⅕": 1 / 5, "⅖": 2 / 5, "⅗": 3 / 5, "⅘": 4 / 5,
+    "⅙": 1 / 6, "⅚": 5 / 6,
+    "⅛": 1 / 8, "⅜": 3 / 8, "⅝": 5 / 8, "⅞": 7 / 8
+  };
+
+  const unicodeMixedMatch =
+    line.match(/^(\d+)\s*([½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞])/);
+
+  if (unicodeMixedMatch) {
+    const whole = parseInt(unicodeMixedMatch[1], 10);
+
+    return {
+      value: whole + vulgarFractions[unicodeMixedMatch[2]],
+      matchLength: unicodeMixedMatch[0].length
+    };
+  }
+
+  const unicodeFractionMatch =
+    line.match(/^([½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞])/);
+
+  if (unicodeFractionMatch) {
+    return {
+      value: vulgarFractions[unicodeFractionMatch[1]],
+      matchLength: unicodeFractionMatch[0].length
+    };
+  }
 
   const mixedMatch =
     line.match(/^(\d+)\s+(\d+)\/(\d+)/);
@@ -661,9 +691,6 @@ function renderRecipes() {
             ? recipe.time.filter(Boolean)
             : [];
 
-        const time =
-          escapeHtml(timeList[0] || "");
-
         const recipeFrom =
           escapeHtml(recipe.from || "");
 
@@ -722,8 +749,8 @@ function renderRecipes() {
             <div class="card-bottom">
 
               ${
-                time
-                  ? `<span>${time}</span>`
+                timeList.length
+                  ? `<div class="card-times">${timeList.map((entry) => `<span>${escapeHtml(entry)}</span>`).join("")}</div>`
                   : `<span></span>`
               }
 
@@ -1607,7 +1634,7 @@ deleteForm.addEventListener(
 
 
     if (
-      confirmation.value.trim() !==
+      confirmation.value.trim().toUpperCase() !==
       "DELETE"
     ) {
       return;
