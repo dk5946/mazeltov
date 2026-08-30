@@ -422,6 +422,34 @@ button {
   margin: 0;
 }
 
+.heading-controls {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.sort-control {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(74,54,48,.5);
+  font: 500 .62rem 'Exo 2', sans-serif;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.sort-control select {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 10px;
+  background: rgba(255,251,245,.7);
+  color: var(--ink);
+  font: 500 .62rem 'Exo 2', sans-serif;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
 .recipe-count {
   font: 500 .65rem 'Exo 2', sans-serif;
   text-transform: uppercase;
@@ -459,6 +487,24 @@ button {
   border-color: var(--coral);
   background: linear-gradient(135deg, var(--coral), var(--rose));
   color: var(--white);
+}
+
+.tag-filters {
+  margin-top: -18px;
+}
+
+.tag-filter.is-active,
+.tag-filter:hover {
+  background: linear-gradient(135deg, var(--sage), #6a815e);
+  border-color: var(--sage);
+}
+
+.loading-state {
+  grid-column: 1 / -1;
+  padding: 40px 24px;
+  text-align: center;
+  color: rgba(74,54,48,.6);
+  font-style: italic;
 }
 
 .recipe-grid {
@@ -504,6 +550,32 @@ button {
   margin: 12px 0 6px;
   color: var(--deep);
   font: 600 1.5rem/1.1 'Playfair Display', serif;
+}
+
+.card-photo {
+  width: 100%;
+  height: 140px;
+  object-fit: cover;
+  border-radius: 14px;
+  margin-bottom: 14px;
+  display: block;
+}
+
+.card-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.tag-pill {
+  padding: 3px 9px;
+  border-radius: 999px;
+  background: rgba(124,144,112,.15);
+  color: var(--sage);
+  font: 600 .55rem 'Exo 2', sans-serif;
+  letter-spacing: .04em;
+  text-transform: uppercase;
 }
 
 .card-category {
@@ -683,6 +755,22 @@ dialog[open] {
   color: var(--coral);
 }
 
+.print-button {
+  align-self: center;
+  margin-right: 12px;
+  border: 0;
+  background: transparent;
+  color: var(--coral);
+  font: 600 .62rem 'Exo 2', sans-serif;
+  letter-spacing: .05em;
+  text-transform: uppercase;
+  transition: color .15s ease;
+}
+
+.print-button:hover {
+  color: var(--deep);
+}
+
 .recipe-dialog label {
   display: block;
   margin: 16px 0;
@@ -731,6 +819,79 @@ dialog[open] {
   text-transform: none;
 }
 
+.current-photo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: -8px 0 16px;
+}
+
+.current-photo-preview {
+  width: 64px;
+  height: 64px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+}
+
+.remove-photo-label {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: rgba(74,54,48,.6);
+  font: 500 .65rem 'Exo 2', sans-serif;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.remove-photo-label input {
+  width: auto;
+  margin: 0;
+}
+
+.tag-fieldset {
+  margin: 16px 0;
+  padding: 0;
+  border: none;
+}
+
+.tag-fieldset legend {
+  display: block;
+  width: 100%;
+  margin-bottom: 8px;
+  padding: 0;
+  color: var(--deep);
+  font: 600 .62rem 'Exo 2', sans-serif;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.tag-checkboxes {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.tag-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0;
+  padding: 7px 12px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: rgba(253,243,234,.5);
+  color: var(--ink);
+  font: 500 .68rem 'Libre Baskerville', serif;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.tag-checkbox input {
+  width: auto;
+  margin: 0;
+}
+
 .save-button {
   margin-top: 10px;
   width: 100%;
@@ -773,6 +934,15 @@ dialog[open] {
   color: var(--deep);
   font: 600 clamp(2rem,4.5vw,3.6rem)/1.05 'Playfair Display', serif;
   letter-spacing: -.02em;
+}
+
+.detail-photo {
+  width: 100%;
+  max-height: 260px;
+  object-fit: cover;
+  border-radius: 16px;
+  margin-top: 18px;
+  display: block;
 }
 
 .detail-from {
@@ -822,6 +992,37 @@ dialog[open] {
   margin: 0 0 14px;
   color: var(--deep);
   font: 600 1.4rem 'Playfair Display', serif;
+}
+
+.scale-controls {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: -6px 0 16px;
+}
+
+.scale-label {
+  color: rgba(74,54,48,.55);
+  font: 600 .62rem 'Exo 2', sans-serif;
+  letter-spacing: .06em;
+  text-transform: uppercase;
+}
+
+.scale-button {
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  padding: 5px 13px;
+  background: transparent;
+  color: var(--ink);
+  font: 600 .65rem 'Exo 2', sans-serif;
+  transition: background .15s ease, color .15s ease, border-color .15s ease;
+}
+
+.scale-button.is-active,
+.scale-button:hover {
+  background: var(--coral);
+  border-color: var(--coral);
+  color: var(--white);
 }
 
 .detail-columns ul,
@@ -988,6 +1189,44 @@ dialog[open] {
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+/* =========================
+   PRINT
+   ========================= */
+
+@media print {
+
+  body::before {
+    display: none;
+  }
+
+  body * {
+    visibility: hidden;
+  }
+
+  .detail-dialog,
+  .detail-dialog * {
+    visibility: visible;
+  }
+
+  .detail-dialog {
+    position: absolute;
+    inset: 0;
+    top: 0;
+    left: 0;
+    transform: none;
+    width: 100%;
+    max-height: none;
+    box-shadow: none;
+    background: var(--white);
+  }
+
+  .print-button,
+  .close-button,
+  .scale-controls {
+    display: none !important;
   }
 }
 
