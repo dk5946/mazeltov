@@ -468,17 +468,17 @@ function renderRecipes() {
               <button
                 class="view-button"
                 type="button"
-                data-view="${recipeId}"
+                data-edit="${recipeId}"
               >
-                View recipe ↗
+                Edit
               </button>
 
               <button
                 class="view-button"
                 type="button"
-                data-edit="${recipeId}"
+                data-view="${recipeId}"
               >
-                Edit
+                View recipe ↗
               </button>
 
             </div>
