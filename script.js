@@ -86,7 +86,7 @@ const starterRecipes = [
       "2 tbsp honey",
       "1 tsp salt"
     ],
-    method: [
+    directions: [
       "Mix and knead until smooth.",
       "Let rise until doubled.",
       "Braid, brush with egg, and bake at 350°F until golden."
@@ -108,7 +108,7 @@ const starterRecipes = [
       "Fresh herbs",
       "Olive oil"
     ],
-    method: [
+    directions: [
       "Season the chicken generously.",
       "Roast with lemon and herbs at 425°F.",
       "Rest for 10 minutes before serving."
@@ -130,7 +130,7 @@ const starterRecipes = [
       "3 eggs",
       "Orange zest"
     ],
-    method: [
+    directions: [
       "Whisk wet ingredients together.",
       "Fold in flour and zest.",
       "Bake at 350°F until golden and springy."
@@ -265,10 +265,15 @@ async function loadRecipes() {
             ? data.ingredients
             : [],
 
-        method:
-          Array.isArray(data.method)
-            ? data.method
-            : [],
+        // Reads the current "directions" field, but falls back to the
+        // older "method" field name so recipes saved before this rename
+        // still show their steps.
+        directions:
+          Array.isArray(data.directions)
+            ? data.directions
+            : Array.isArray(data.method)
+              ? data.method
+              : [],
 
         createdAt:
           data.createdAt || null
@@ -381,6 +386,9 @@ function renderRecipes() {
         const time =
           escapeHtml(recipe.time || "");
 
+        const recipeFrom =
+          escapeHtml(recipe.from || "");
+
 
         return `
           <article class="recipe-card">
@@ -403,6 +411,12 @@ function renderRecipes() {
               <h3>
                 ${recipeName}
               </h3>
+
+              ${
+                recipeFrom
+                  ? `<p class="card-from">♥ from ${recipeFrom}</p>`
+                  : ``
+              }
 
               <p>
                 ${note}
@@ -632,9 +646,9 @@ grid.addEventListener("click", (event) => {
         : "";
 
 
-    form.elements.method.value =
-      Array.isArray(recipe.method)
-        ? recipe.method.join("\n")
+    form.elements.directions.value =
+      Array.isArray(recipe.directions)
+        ? recipe.directions.join("\n")
         : "";
 
 
@@ -780,9 +794,9 @@ grid.addEventListener("click", (event) => {
 
     // DIRECTIONS
 
-    const method =
-      Array.isArray(recipe.method)
-        ? recipe.method
+    const directions =
+      Array.isArray(recipe.directions)
+        ? recipe.directions
         : [];
 
 
@@ -795,7 +809,7 @@ grid.addEventListener("click", (event) => {
     if (detailDirections) {
 
       detailDirections.innerHTML =
-        method
+        directions
           .map(
             (step) =>
               `<li>${escapeHtml(step)}</li>`
@@ -816,7 +830,7 @@ grid.addEventListener("click", (event) => {
 
       detailFrom.textContent =
         recipe.from
-          ? `From: ${recipe.from}`
+          ? `♥ from ${recipe.from}`
           : "";
 
       detailFrom.hidden =
@@ -909,9 +923,9 @@ form.addEventListener(
           .map((item) => item.trim())
           .filter(Boolean),
 
-      method:
+      directions:
         String(
-          data.get("method") || ""
+          data.get("directions") || ""
         )
           .split("\n")
           .map((item) => item.trim())
