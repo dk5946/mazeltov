@@ -1,4 +1,3 @@
-```css
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Caveat:wght@500;600;700&display=swap');
 
 :root {
@@ -33,15 +32,16 @@ body {
 }
 
 /* =========================
-   FIXED SCREEN PHOTO
+   SHARED PHOTO BACKGROUND
+   Shows the full photo (never cropped) so the
+   whole couple is always visible, letterboxed
+   on a soft cream background, with a light
+   wash so the photo still reads clearly behind
+   the glass panels of text.
    ========================= */
 
-body::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100dvh;
+.access-gate,
+.recipe-app {
   background-color: var(--paper);
   background-image:
     linear-gradient(
@@ -51,14 +51,8 @@ body::before {
     url('celebration-background.jpg');
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: contain;
-  pointer-events: none;
-  z-index: 0;
-}
-
-body > * {
-  position: relative;
-  z-index: 1;
+  background-size: auto 100%;
+  background-attachment: fixed;
 }
 
 /* =========================
@@ -1032,4 +1026,3 @@ button {
     justify-content: space-between;
   }
 }
-```
