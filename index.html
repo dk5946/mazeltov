@@ -93,9 +93,22 @@
           <h2 id="collection-title">From our <em>kitchen</em> to yours</h2>
         </div>
 
-        <p class="recipe-count" id="recipe-count">
-          0 recipes
-        </p>
+        <div class="heading-controls">
+
+          <label class="sort-control" for="recipe-sort">
+            Sort
+            <select id="recipe-sort">
+              <option value="newest">Newest</option>
+              <option value="az">A–Z</option>
+              <option value="time">Cook time</option>
+            </select>
+          </label>
+
+          <p class="recipe-count" id="recipe-count">
+            0 recipes
+          </p>
+
+        </div>
 
       </div>
 
@@ -177,11 +190,40 @@
       </nav>
 
 
+      <nav class="filters tag-filters" aria-label="Filter by dietary tag">
+
+        <button class="filter tag-filter" type="button" data-tag-filter="Dairy-free">
+          Dairy-free
+        </button>
+
+        <button class="filter tag-filter" type="button" data-tag-filter="Pareve">
+          Pareve
+        </button>
+
+        <button class="filter tag-filter" type="button" data-tag-filter="Vegetarian">
+          Vegetarian
+        </button>
+
+        <button class="filter tag-filter" type="button" data-tag-filter="Gluten-free">
+          Gluten-free
+        </button>
+
+        <button class="filter tag-filter" type="button" data-tag-filter="Nut-free">
+          Nut-free
+        </button>
+
+        <button class="filter tag-filter" type="button" data-tag-filter="Kid-friendly">
+          Kid-friendly
+        </button>
+
+      </nav>
+
+
       <div
         class="recipe-grid"
         id="recipe-grid"
         aria-live="polite"
-      ></div>
+      ><p class="loading-state">Loading recipes…</p></div>
 
       <p
         class="empty-state"
@@ -260,6 +302,35 @@
       </label>
 
 
+      <label>
+        Recipe photo
+        <span class="field-hint">optional — JPG or PNG</span>
+
+        <input
+          type="file"
+          name="photo"
+          accept="image/*"
+        >
+      </label>
+
+      <div
+        id="current-photo-wrap"
+        class="current-photo-wrap"
+        hidden
+      >
+        <img
+          id="current-photo-preview"
+          class="current-photo-preview"
+          alt="Current recipe photo"
+        >
+
+        <label class="remove-photo-label">
+          <input type="checkbox" name="removePhoto">
+          Remove current photo
+        </label>
+      </div>
+
+
       <div class="form-row">
 
         <label>
@@ -327,6 +398,48 @@
           placeholder="e.g. Grandma, Aunt Sara, Cookbook"
         >
       </label>
+
+
+      <fieldset class="tag-fieldset">
+        <legend>
+          Dietary tags
+          <span class="field-hint">optional — select all that apply</span>
+        </legend>
+
+        <div class="tag-checkboxes">
+
+          <label class="tag-checkbox">
+            <input type="checkbox" name="tags" value="Dairy-free">
+            Dairy-free
+          </label>
+
+          <label class="tag-checkbox">
+            <input type="checkbox" name="tags" value="Pareve">
+            Pareve
+          </label>
+
+          <label class="tag-checkbox">
+            <input type="checkbox" name="tags" value="Vegetarian">
+            Vegetarian
+          </label>
+
+          <label class="tag-checkbox">
+            <input type="checkbox" name="tags" value="Gluten-free">
+            Gluten-free
+          </label>
+
+          <label class="tag-checkbox">
+            <input type="checkbox" name="tags" value="Nut-free">
+            Nut-free
+          </label>
+
+          <label class="tag-checkbox">
+            <input type="checkbox" name="tags" value="Kid-friendly">
+            Kid-friendly
+          </label>
+
+        </div>
+      </fieldset>
 
 
       <label>
@@ -454,6 +567,15 @@
 
         <button
           type="button"
+          class="print-button"
+          id="print-recipe"
+          aria-label="Print recipe"
+        >
+          ⎙ Print
+        </button>
+
+        <button
+          type="button"
           class="close-button"
           data-close-detail
           aria-label="Close recipe"
@@ -463,6 +585,13 @@
 
       </div>
 
+
+      <img
+        id="detail-photo"
+        class="detail-photo"
+        alt=""
+        hidden
+      >
 
       <h2 id="detail-title"></h2>
 
@@ -482,6 +611,8 @@
 
         <span id="detail-makes"></span>
 
+        <div id="detail-tags" class="detail-time-group"></div>
+
       </div>
 
 
@@ -490,6 +621,14 @@
         <section>
 
           <h3>Ingredients</h3>
+
+          <div class="scale-controls" id="scale-controls">
+            <span class="scale-label">Scale</span>
+
+            <button type="button" class="scale-button is-active" data-scale="1">1×</button>
+            <button type="button" class="scale-button" data-scale="2">2×</button>
+            <button type="button" class="scale-button" data-scale="3">3×</button>
+          </div>
 
           <ul id="detail-ingredients"></ul>
 
