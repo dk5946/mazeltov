@@ -317,6 +317,31 @@ async function loadRecipes() {
 
 
 // =========================
+// SMART SEARCH MATCH
+// Splits the query into individual words so a search
+// matches regardless of word order, extra words, or
+// whether the full name was typed (e.g. "herb chicken"
+// or "chicken lemon" both match "Lemon herb chicken").
+// =========================
+
+function matchesSmartSearch(searchableText, query) {
+
+  const tokens =
+    query
+      .split(/\s+/)
+      .filter(Boolean);
+
+  if (tokens.length === 0) {
+    return true;
+  }
+
+  return tokens.every((token) =>
+    searchableText.includes(token)
+  );
+}
+
+
+// =========================
 // RENDER RECIPES
 // =========================
 
@@ -339,24 +364,32 @@ function renderRecipes() {
         recipe.note || "",
         recipe.category || "",
         recipe.from || "",
-        recipe.makes || ""
+        recipe.makes || "",
+        ...(Array.isArray(recipe.ingredients) ? recipe.ingredients : [])
       ]
         .join(" ")
         .toLowerCase();
 
 
       const matchesSearch =
-        searchableText.includes(query);
+        matchesSmartSearch(searchableText, query);
 
 
       return matchesFilter && matchesSearch;
     });
 
 
+  const isFiltered =
+    activeFilter !== "All" || query.length > 0;
+
   count.textContent =
-    `${recipes.length} recipe${
-      recipes.length === 1 ? "" : "s"
-    }`;
+    isFiltered
+      ? `${visibleRecipes.length} of ${recipes.length} recipe${
+          recipes.length === 1 ? "" : "s"
+        }`
+      : `${recipes.length} recipe${
+          recipes.length === 1 ? "" : "s"
+        }`;
 
 
   emptyState.hidden =
