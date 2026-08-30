@@ -240,7 +240,7 @@ body.is-authenticated .recipe-app {
   outline: 0;
   background: transparent;
   color: var(--ink);
-  font: italic .8rem 'Libre Baskerville', serif;
+  font: italic 16px 'Libre Baskerville', serif;
 }
 
 .search-box input::placeholder {
@@ -445,7 +445,7 @@ button {
   padding: 5px 10px;
   background: rgba(255,251,245,.7);
   color: var(--ink);
-  font: 500 .62rem 'Exo 2', sans-serif;
+  font: 500 16px 'Exo 2', sans-serif;
   text-transform: none;
   letter-spacing: 0;
 }
@@ -482,21 +482,32 @@ button {
   transition: background .15s ease, color .15s ease, border-color .15s ease;
 }
 
-.filter.is-active,
-.filter:hover {
+.filter.is-active {
   border-color: var(--coral);
   background: linear-gradient(135deg, var(--coral), var(--rose));
   color: var(--white);
+}
+
+.filter:not(.is-active):hover {
+  border-color: var(--coral);
+  background: rgba(224,133,116,.16);
+  color: var(--deep);
 }
 
 .tag-filters {
   margin-top: -18px;
 }
 
-.tag-filter.is-active,
-.tag-filter:hover {
+.tag-filter.is-active {
   background: linear-gradient(135deg, var(--sage), #6a815e);
   border-color: var(--sage);
+  color: var(--white);
+}
+
+.tag-filter:not(.is-active):hover {
+  border-color: var(--sage);
+  background: rgba(124,144,112,.16);
+  color: var(--ink);
 }
 
 .loading-state {
@@ -607,13 +618,20 @@ button {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  align-items: center;
+  align-items: flex-start;
   row-gap: 8px;
   margin-top: 22px;
   padding-top: 15px;
   border-top: 1px dashed var(--line);
   font: 500 .6rem 'Exo 2', sans-serif;
   color: rgba(74,54,48,.55);
+}
+
+.card-times {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding-top: 2px;
 }
 
 .view-button {
@@ -707,6 +725,7 @@ dialog[open] {
   transform: translate(-50%, -50%);
   margin: 0;
   overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .recipe-dialog {
@@ -791,7 +810,7 @@ dialog[open] {
   padding: 11px 13px;
   background: rgba(253,243,234,.5);
   color: var(--ink);
-  font: .8rem 'Libre Baskerville', serif;
+  font: 16px 'Libre Baskerville', serif;
   transition: border-color .15s ease;
 }
 
@@ -821,6 +840,7 @@ dialog[open] {
 
 .current-photo-wrap {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   gap: 12px;
   margin: -8px 0 16px;
@@ -1065,7 +1085,7 @@ dialog[open] {
 .undo-bar {
   position: fixed;
   right: 22px;
-  bottom: 22px;
+  bottom: calc(22px + env(safe-area-inset-bottom));
   z-index: 5;
 
   display: flex;
@@ -1131,7 +1151,7 @@ dialog[open] {
   border-radius: 12px;
   padding: 11px 13px;
   background: rgba(253,243,234,.5);
-  font: 500 .72rem 'Exo 2', sans-serif;
+  font: 500 16px 'Exo 2', sans-serif;
 }
 
 .delete-dialog input:focus {
@@ -1250,7 +1270,7 @@ dialog[open] {
   }
 
   .search-box input {
-    width: 110px;
+    width: 160px;
   }
 
   .hero {
@@ -1304,6 +1324,33 @@ dialog[open] {
     font-size: 1.05rem;
   }
 
+  .delete-button {
+    width: 34px;
+    height: 34px;
+    top: 12px;
+    right: 12px;
+  }
+
+  .close-button {
+    padding: 6px 8px;
+  }
+
+  .print-button {
+    padding: 6px 4px;
+  }
+
+  .view-button {
+    padding: 8px 0;
+  }
+
+  .scale-button {
+    padding: 8px 14px;
+  }
+
+  .tag-checkbox {
+    padding: 9px 14px;
+  }
+
   .recipe-grid {
     grid-template-columns: 1fr;
   }
@@ -1313,6 +1360,12 @@ dialog[open] {
     gap: 10px;
     overflow-x: auto;
     padding: 12px 14px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .filters::-webkit-scrollbar {
+    display: none;
   }
 
   .filter {
@@ -1362,7 +1415,7 @@ dialog[open] {
 
   .undo-bar {
     right: 12px;
-    bottom: 12px;
+    bottom: calc(12px + env(safe-area-inset-bottom));
     left: 12px;
     justify-content: space-between;
   }
