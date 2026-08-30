@@ -1,3 +1,4 @@
+```css
 @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Libre+Baskerville:ital,wght@0,400;1,400&family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500&family=Caveat:wght@500;600;700&display=swap');
 
 :root {
@@ -32,27 +33,44 @@ body {
 }
 
 /* =========================
-   SHARED PHOTO BACKGROUND
-   Shows the full photo (never cropped) so the
-   whole couple is always visible, letterboxed
-   on a soft cream background, with a light
-   wash so the photo still reads clearly behind
-   the glass panels of text.
+   FIXED SCREEN PHOTO
    ========================= */
 
-.access-gate,
-.recipe-app {
-  background-color: var(--paper);
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100dvh;
+
   background-image:
     linear-gradient(
-      rgba(253,243,234,.22),
-      rgba(253,243,234,.3)
+      rgba(253,243,234,.15),
+      rgba(253,243,234,.15)
     ),
     url('celebration-background.jpg');
+
   background-repeat: no-repeat;
   background-position: center center;
-  background-size: auto 100%;
-  background-attachment: fixed;
+
+  /* Keeps the entire photo visible.
+     The photo is only as tall as the screen. */
+  background-size: contain;
+
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Put the actual website above the photo */
+body > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Website itself stays transparent */
+.access-gate,
+.recipe-app {
+  background: transparent;
 }
 
 /* =========================
@@ -1026,3 +1044,4 @@ button {
     justify-content: space-between;
   }
 }
+```
