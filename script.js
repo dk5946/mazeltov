@@ -74,7 +74,7 @@ const starterRecipes = [
     id: "challah",
     name: "Friday night challah",
     category: "Bakes",
-    time: "2 hr 30 min",
+    time: ["2 hr 30 min"],
     note: "Golden, soft, and made for tearing into while it is still warm.",
     from: "",
     makes: "",
@@ -97,7 +97,7 @@ const starterRecipes = [
     id: "chicken",
     name: "Lemon herb chicken",
     category: "Mains",
-    time: "55 min",
+    time: ["55 min"],
     note: "A bright, easy dinner with crisp edges and plenty of pan juices.",
     from: "",
     makes: "",
@@ -119,7 +119,7 @@ const starterRecipes = [
     id: "cake",
     name: "Honey olive oil cake",
     category: "Sweets",
-    time: "1 hr",
+    time: ["1 hr"],
     note: "Tender and fragrant, with just the right amount of sweetness.",
     from: "",
     makes: "",
@@ -252,7 +252,16 @@ async function loadRecipes() {
 
         category: data.category || "Mains",
 
-        time: data.time || "",
+        // Supports the newer multi-line time field (an array — one
+        // entry per line, e.g. Prep / Cook / Total), but also reads
+        // recipes saved before this change, which stored time as a
+        // single string.
+        time:
+          Array.isArray(data.time)
+            ? data.time
+            : data.time
+              ? [data.time]
+              : [],
 
         note: data.note || "",
 
@@ -416,8 +425,13 @@ function renderRecipes() {
         const note =
           escapeHtml(recipe.note || "");
 
+        const timeList =
+          Array.isArray(recipe.time)
+            ? recipe.time.filter(Boolean)
+            : [];
+
         const time =
-          escapeHtml(recipe.time || "");
+          escapeHtml(timeList[0] || "");
 
         const recipeFrom =
           escapeHtml(recipe.from || "");
@@ -447,7 +461,7 @@ function renderRecipes() {
 
               ${
                 recipeFrom
-                  ? `<p class="card-from">♥ from ${recipeFrom}</p>`
+                  ? `<p class="card-from"><span class="heart">♥</span> from ${recipeFrom}</p>`
                   : ``
               }
 
@@ -654,7 +668,9 @@ grid.addEventListener("click", (event) => {
 
 
     form.elements.time.value =
-      recipe.time || "";
+      Array.isArray(recipe.time)
+        ? recipe.time.join("\n")
+        : "";
 
 
     form.elements.note.value =
@@ -772,13 +788,18 @@ grid.addEventListener("click", (event) => {
 
     if (detailTime) {
 
-      detailTime.textContent =
-        recipe.time
-          ? `Time: ${recipe.time}`
-          : "";
+      const times =
+        Array.isArray(recipe.time)
+          ? recipe.time.filter(Boolean)
+          : [];
 
-      detailTime.hidden =
-        !recipe.time;
+      detailTime.innerHTML =
+        times
+          .map(
+            (entry) =>
+              `<span>${escapeHtml(entry)}</span>`
+          )
+          .join("");
     }
 
 
@@ -790,6 +811,12 @@ grid.addEventListener("click", (event) => {
         : [];
 
 
+    const ingredientCount =
+      ingredients.filter(
+        (item) => !item.trim().endsWith(":")
+      ).length;
+
+
     const detailIngredientsCount =
       document.querySelector(
         "#detail-ingredients-count"
@@ -799,8 +826,8 @@ grid.addEventListener("click", (event) => {
     if (detailIngredientsCount) {
 
       detailIngredientsCount.textContent =
-        `${ingredients.length} ingredient${
-          ingredients.length === 1
+        `${ingredientCount} ingredient${
+          ingredientCount === 1
             ? ""
             : "s"
         }`;
@@ -817,10 +844,18 @@ grid.addEventListener("click", (event) => {
 
       detailIngredients.innerHTML =
         ingredients
-          .map(
-            (ingredient) =>
-              `<li>${escapeHtml(ingredient)}</li>`
-          )
+          .map((ingredient) => {
+
+            const trimmed =
+              ingredient.trim();
+
+            const isHeading =
+              trimmed.endsWith(":");
+
+            return isHeading
+              ? `<li class="ingredient-heading">${escapeHtml(trimmed.slice(0, -1))}</li>`
+              : `<li>${escapeHtml(ingredient)}</li>`;
+          })
           .join("");
     }
 
@@ -861,9 +896,9 @@ grid.addEventListener("click", (event) => {
 
     if (detailFrom) {
 
-      detailFrom.textContent =
+      detailFrom.innerHTML =
         recipe.from
-          ? `♥ from ${recipe.from}`
+          ? `<span class="heart">♥</span> from ${escapeHtml(recipe.from)}`
           : "";
 
       detailFrom.hidden =
@@ -931,7 +966,10 @@ form.addEventListener(
       time:
         String(
           data.get("time") || ""
-        ).trim(),
+        )
+          .split("\n")
+          .map((item) => item.trim())
+          .filter(Boolean),
 
       note:
         String(
