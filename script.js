@@ -531,9 +531,29 @@ function renderIngredientsList(recipe, scale) {
           return `<li>${escapeHtml(line)}</li>`;
         }
 
-        const scaledLine =
-          formatQuantity(parsed.value * scale) +
-          line.slice(parsed.matchLength);
+        let scaledLine;
+
+        // Range like "1 to 1 1/2" or "1-1 1/2": scale both ends
+        const afterFirst = line.slice(parsed.matchLength);
+        const sepMatch =
+          afterFirst.match(/^\s*(?:to|-|\u2013|\u2014)\s*(?=[\d\u00bc-\u00be\u2150-\u215e])/i);
+        const second = sepMatch
+          ? parseLeadingQuantity(afterFirst.slice(sepMatch[0].length))
+          : null;
+
+        if (second) {
+          const sep = sepMatch[0].trim() === "to" ? " to " : sepMatch[0].trim().toLowerCase() === "to" ? " to " : "-";
+          scaledLine =
+            formatQuantity(parsed.value * scale) +
+            sep +
+            formatQuantity(second.value * scale) +
+            afterFirst.slice(sepMatch[0].length + second.matchLength);
+        } else {
+          scaledLine =
+            formatQuantity(parsed.value * scale) +
+            afterFirst;
+        }
+
 
         return `<li>${escapeHtml(scaledLine)}</li>`;
       })
